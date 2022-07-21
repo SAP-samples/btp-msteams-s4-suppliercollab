@@ -1,0 +1,73 @@
+{
+    "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.9/MicrosoftTeams.schema.json",
+    "manifestVersion": "1.9",
+    "version": "1.0.0",
+    "id": "<msteamsappguid-placeholder>",
+    "packageName": "com.sap.sfsf.leaverequest",
+    "developer": {
+        "name": "SAP",
+        "websiteUrl": "https://www.sap.com",
+        "privacyUrl": "https://www.sap.com",
+        "termsOfUseUrl": "https://www.sap.com"
+    },
+    "name": {
+        "short": "SAP Supplier Procurement BOT",
+        "full": "SAP Supplier Procurement BOT"
+    },
+    "description": {
+        "short": "SAP Supplier Procurement BOT",
+        "full": "SAP Supplier Procurement BOTs"
+    },
+    "icons": {
+        "color": "s4hana-color.png",
+        "outline": "s4hana-outline.png"
+    },
+    "accentColor": "#FDA402",
+    "staticTabs": [{
+        "entityId": "com.sap.s4hana.suppliercallab.event",
+        "name": "Event",
+        "contentBotId": "<msappid-placeholder>",
+        "scopes": [
+            "personal"
+        ]
+    }],
+    "configurableTabs": [
+        {
+          "configurationUrl": "https://<DOMAIN>/Configure.html",
+          "canUpdateConfiguration": true,
+          "scopes": [
+            "groupchat",
+            "team"
+          ],
+          "meetingSurfaces": [
+            "sidePanel"
+          ],
+          "context": [
+            "meetingChatTab",
+            "meetingSidePanel"
+          ]
+        }
+    ],
+    "bots": [
+        {
+            "botId": "<msappid-placeholder>",
+            "isNotificationOnly": false,
+            "supportsFiles": false,
+            "scopes": [
+                "personal"
+            ]
+        }
+    ],
+    "permissions": [
+        "identity",
+        "messageTeamMembers"
+    ],
+    "validDomains": [
+        "*.botframework.com",
+        "*.hana.ondemand.com"
+    ],
+    "webApplicationInfo": {
+        "id": "<msappid-placeholder>",
+        "resource": "api://<domain-placeholder>/botid-<msappid-placeholder>"
+    }
+}

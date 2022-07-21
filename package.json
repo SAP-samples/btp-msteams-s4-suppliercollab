@@ -1,0 +1,42 @@
+{
+    "name": "btp-s4-msteams-suppliercollab",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {
+        "start": "node index.js",
+        "push-app": "cd ./deploy && cf push --vars-file vars.yml",
+        "build-client": "cd client && yarn install && npm run build",
+        "-------------------": "",
+        "OSX, Linux": "",
+        "------------------": "",
+        "build-server": "npm install",
+        "build-deploy": "npm run build-server && npm run build-client && npm run push-app"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@microsoft/microsoft-graph-client": "^3.0.2",
+        "@sap-cloud-sdk/core": "^1.54.1",
+        "@sap/xsenv": "^3.2.2",
+        "@sap/xssec": "^3.2.13",
+        "axios": "^0.26.1",
+        "body-parser": "^1.20.0",
+        "botbuilder": "^4.16.0",
+        "botbuilder-azure-blobs": "^4.16.0",
+        "botbuilder-dialogs": "^4.16.0",
+        "cors": "^2.8.5",
+        "dotenv": "^16.0.0",
+        "express": "^4.17.3",
+        "isomorphic-fetch": "^3.0.0",
+        "moment": "^2.29.3",
+        "moment-timezone": "^0.5.34",
+        "passport": "^0.5.2",
+        "passport-azure-ad": "^4.3.1",
+        "qs": "^6.10.3",
+        "querystring": "^0.2.1",
+        "uuid": "^8.3.2"
+    }
+}

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Token App Config page</title>
+    <link rel="stylesheet" href="./configure.css">
+</head>
+
+<body>
+    <header class="header">
+        <header class="header">
+            <div class="header-inner-container">
+                <div style="display: flex; align-content: center; font-size: 24px;">Supplier Collaboration</div>
+            </div>
+            <div class="header-inner-container">
+                <div style="display: flex; align-content: center;font-size: 18px;">Press save to continue</div>
+            </div>
+
+        </header>
+        <script src="https://statics.teams.microsoft.com/sdk/v1.7.0/js/MicrosoftTeams.min.js"></script>
+        <script>
+            microsoftTeams.initialize();
+            microsoftTeams.appInitialization.notifySuccess();
+            microsoftTeams.settings.registerOnSaveHandler(function (saveEvent) {
+                microsoftTeams.settings.setSettings({
+                    entityID: "Side Panel App",
+                    contentUrl: `${window.location.origin}/index.js`,
+                    suggestedTabName: "Purchase Order Summary",
+                    websiteUrl: `${window.location.origin}/index.js`,
+                });
+                saveEvent.notifySuccess();
+            });
+            microsoftTeams.settings.setValidityState(true);
+        </script>
+</body>
+
+</html>

@@ -1,0 +1,30 @@
+.react-tabs__tab--selected{
+    background: rgb(98,100,167);
+    color: rgb(255,255,255);
+}
+.parent{
+    left: "5px";
+    padding-bottom: "2rem";
+}
+body{
+    left: "5px";
+    padding-bottom: "2rem"; 
+}
+.ui-dropdown__container.hw{
+    width: 14rem;
+}
+.ui-form__dropdown{
+    width: 14rem;
+}
+.ui-dropdown__items-list.hx{
+    width: 14rem;
+}
+.ui-dropdown__items-list.hw{
+    width: 14rem;
+}
+.content-loader {
+    height: 10vh;
+}
+.notification-container {
+    width: 250px;
+}
