@@ -2,70 +2,52 @@
 In this section, you will create an OData service based on the SAP RAP framework to read, create, update & delete the Purchase order supplier confirmations. Then we will create a background job that reads all the pending supplier confirmations & send them to the event mesh. After this step, the event mesh webhook subscription will send the Team's user a message with all the Purchase orders with pending supplier confirmations.
 
 ### Prerequisites
-Moderate knowledge of SAP ABAP, assigning user roles & navigating through SAP.
+Moderate knowledge of SAP ABAP, RAP framework, assigning user roles, navigating through SAP & developer authorizations assigned to your SAP S/4HANA user id.
 
-### Flexible Workflow Activation
-In this step, you will create a Flexible workflow, which will send a request(Workflow instance/Workitem) to an approver when you create a purchase requisition with a net amount greater than or equal to 500 USD in your SAP S/4HANA system.
+### SAP RAP based OData service for Purchase Order Supplier Confirmation
+In this step, you will create(import the git repo) an OData service using the RAP framework for reading, creating, updating & deleting the supplier confirmations.
 
->Note: This step is optional if you already have an existing workflow running in your SAP S/4HANA system. Ensure that you deactivate other workflows before creating and activating this new workflow.
+>Note: We created this odata service as no standard odata service exists at the time of this git repository creation for SAP S/4HANA 2020
 
-1. Open the Fiori application - **Manage Workflow for Purchase Requisitions**.<br>
-    >Note: Ensure the Role - SAP_BR_BPC_EXPERT is assigned to the user to have the above application accessible.<br>
-    **Help**: https://fioriappslibrary.hana.ondemand.com/sap/fix/externalViewer/#/detail/Apps('F2705')/S20OP
+#### <ins> Import ABAP Git Project to run <ins>
+Use the below git URL (ABAP branch) to import the ABAP package, which has the code for the RAP OData service and the background job (which will be discussed in the upcoming steps).
 
-2. Select **Release of Purchase Requisition Item** as the workflow type.<br>
-![WorkflowType](./images/s4/1.png)
+1.  Open **SE38** and execute the program **ZABAPGIT_STANDALONE**.<br>
+    >Note: If the above program is not there in the system, use the below link to install ABAP Git<br>
+    https://docs.abapgit.org/guide-install.html
 
-3. Click **Add** to add a new workflow.<br>
-![Add a New Workflow](./images/s4/2.png)
+2.  Click the **New Online** button to import the repository.<br>
+![Import Repo](./images/1.png)
 
-4. Provide a unique name to the workflow.<br>
-![name of workflow](./images/s4/3.png)
+3. Enter the git repository URL, package & branch as **ABAP** and click **Create Online Repo** to import the repository.<br>
+![Repo details](./images/2.png)
 
-5. Select **Net amount is equal to or greater than** as the condition and **500 USD** as the amount.<br>
-![condition](images/s4/4.png)
-    >Note: This step ensures that this workflow will be triggered only if the **Net Amount** of the Purchase Requisition is greater than or equal to **500 USD**.
+4. Select **Clone Online Repo** and click **pull** to save the repo to your SAP S/4HANA system.<br>
+    >Note: For more information, please follow the official ABAP Git tutorial below:<br>
+    https://docs.abapgit.org/guide-online-install.html
 
-6. Add the approval step by clicking the **Add** button in the **Step Sequence** section.<br>
-![Approval Add step](images/s4/5.png)
+#### <ins> Understanding the generated artifacts & code<ins>
 
-7. Select the step type **Release of Purchase Requisition Item** from the dropdown.<br>
-![Step type Approval](images/s4/6.png)
+After installing the git repository, different artifacts will be created in your package like the CDS view, behavior definitions, service bindings, etc.; let's understand them in detail.
+>Note: You should use eclipse with ABAP plugins installed to do the next steps.
 
-8. Go to the **Recipients** section, select the dropdown value **User** for **Assignment By**, and provide the user id in the **User** field. <br> 
-Please Note: This user id needs to have the email address created in Azure AD. Go to user administrator in SAP S/4HANA and update the User's email address.
-![User Assignment](./images/s4/7.png)
-    >Note: In this step, you will select which User the workflow should go to for approval.
+5. Open the CDS view **ZI_PO_CONF** in eclipse, which is used to fetch all the supplier confirmations for Purchase Orders.
+![CDS View](./images/3.png)
 
-9. Click the **Add** button to save this step. The page will automatically navigate to the previous page.<br>
-![Save the step](./images/s4/8.png)
+6. **ZI_PO_CONF** is the behavior definition that provides the service's Create, Update & Delete capabilities. We are using unmanaged save, to call a function module to save the supplier confirmations.
+![Behavior definition](./images/4.png)
 
-10. Click **Save** to save the workflow.<br>
-![Save the Workflow](./images/s4/9.png)
+7. The class **zbp_i_po_conf** is linked to the behavior definition and has the code to handle the create, update & delete (CUD) operations. Navigate to the **Local Types** to find the code.
+![Local class](./images/5.png)
 
-11. Click **Activate** this workflow.<br>
-![Activate](./images/s4/10.png)
+8. **save_modified** method is overrided to handle the CUD operations. In this method, we call the function module **ME_PO_CONFIRM** to save the supplier confirmations.
+![Local class](./images/5.png)
+    >Note: Use this function module with caution as this is not a released function module
 
-You have now successfully created and activated the new Flexible Workflow.
+9. Now activate the service by clicking the **Publish** button.
+![Local class](./images/6.png)
 
-### Test Purchase Requisition Creation and Workflow
-In this step, you will create a purchase requisition and check if the workflow is created in your SAP S/4HANA system
-12. Open the Fiori application - **Manage Purchase Requisition Professional**.<br>
-    >Note: Enure the Role - SAP_BR_PURCHASER is assigned to the User to have the above application accessible.<br>
-    **Help**: https://fioriappslibrary.hana.ondemand.com/sap/fix/externalViewer/#/detail/Apps('F2229')/S22OP
-
-13. Click **Create** button to create a new Purchase Requisition.<br>
-![create pr](./images/s4/31.png)
-
-14. Add an item with the net amount greater than or equal to 500 USD and click **Create to create the Purchase Requisition.<br>
-![create pr](./images/s4/32.png)
-
-15. Open transaction **SWIA** and execute the transaction with shortcut F8(Function 8 key), which will show the newly created workitem in the list with the type **Dialog Step**. Note down the **Task**, which you will use in the upcoming steps.<br>
-![workitem pr](./images/s4/33.png)
-
-16. (Optional) You can also open the My Inbox Fiori application for the User configured in **Step 8** to see the workflow instance sent to the User's inbox for approval.<br>
-
-You have successfully created a Purchase Requisition, which created a workflow instance and sent it for approval.
+Now you have the service which will be used in the upcoming chapters to read, create, update & delete the suplier confirmations from the extension application deployed in SAP BTP.
 
 ### Background Job to send the Workflow Instances to the Event mesh
 
