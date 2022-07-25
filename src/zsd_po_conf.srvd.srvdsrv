@@ -1,0 +1,4 @@
+@EndUserText.label: 'PO Confirmation service definition'
+define service ZSD_PO_CONF {
+  expose ZI_PO_CONF as Confirmation;
+}

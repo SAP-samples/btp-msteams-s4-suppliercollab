@@ -1,0 +1,11 @@
+managed implementation in class zbp_i_po_conf unique;
+
+define behavior for ZI_PO_CONF //alias <alias_name>
+//late numbering
+lock master
+with unmanaged save
+{
+  create;
+  update;
+  delete;
+}
