@@ -1,11 +1,11 @@
-# Create Supplier Collaboration by extending SAP S/4HANA into Microsoft Azure Ecosystem.
+# Create Supplier Collaboration by Extending SAP S/4HANA into Microsoft Azure Ecosystem
 
-# Description:
+# Description
 This repository contains code samples and instructions for developing a native Microsoft Teams application and SAP BTP Extension application for extending SAP S/4HANA Business scenarios into Microsoft Azure ecosystem.
 
 Important: Please be aware that this GitHub repository will be updated with additional scenarios.Make sure you are pulling the repository from time to time and do a redeployment to SAP Business Technology Platform.
 
-# Scenario:
+# Scenario
 This is one of the use-case in Procure-To-Pay process.
 Requestor creates a Purchase Order with required line items. The operations Manager / Purchase Manger needs to receive the same for approval and look for closure of the PO. In case of delays, Operations Manager will interact with suppliers to discuss the updates on pending confirmations /delivery overdue on the list of line items. This will help all the stakeholders to discuss, view the purchase order details together and complete the confirmation summary.
 
@@ -25,7 +25,7 @@ Let us look at the user journey of the Requestor and Purchasing/Operations manag
 
 # Solution Architecture
 
-# Solution Architecture for SAP S/4HANA on-premise using Cloud Connector and SAP BTP Connectivity Service
+## Solution Architecture for SAP S/4HANA on-premise using Cloud Connector and SAP BTP Connectivity Service
 
 The architecture below leverages the Cloud Connector and SAP Connectivity Service to establish secured communication between SAP BTP and SAP S/4HANA seamlessly. We will see how the communication and flow of information work. Principal propagation of the users is enabled using XSUAA. Let us quickly understand how communication happens among the different systems and approaches for the principal propagation of users.
 
@@ -48,7 +48,7 @@ The architecture below leverages the Cloud Connector and SAP Connectivity Servic
 
 Note: Principal propagation configurations can be set up, which is optional. For testing purposes, you can proceed if you want to execute the scenario with Basic Authentication. However, this is not recommended.
 
-# Solution Architecture for SAP S/4HANA on Azure using Private Link Service in SAP BTP and Microsoft Azure.
+## Solution Architecture for SAP S/4HANA on Azure using Private Link Service in SAP BTP and Microsoft Azure
 
 The architecture below leveraging the SAP Private Link Service in SAP BTP and Azure Private Link for connectivity helps seamlessly establish secured communication between SAP BTP and SAP S/4HANA.
 
@@ -128,25 +128,22 @@ Please follow the below steps to configure additional settings needed for SAP S/
 
 ## Additional Resources
 
-This project has been implemented based on the following Microsoft Bot Builder and Microsoft Office Developer sample repositories.
-
-https://github.com/microsoft/BotBuilder-Samples/tree/main/samples/typescript_nodejs/13.core-bot/
-https://github.com/OfficeDev/Microsoft-Teams-Samples/tree/main/samples/app-sso/nodejs/
+This project has been implemented based on the following Microsoft Bot Builder and Microsoft Office Developer sample repositories:
+- https://github.com/microsoft/BotBuilder-Samples/tree/main/samples/typescript_nodejs/13.core-bot/
+- https://github.com/OfficeDev/Microsoft-Teams-Samples/tree/main/samples/app-sso/nodejs/
 
 Another source of inspiration is the following blog post series by Martin Raepple, in which a Microsoft Teams extension for SAP S/4HANA is developed.
-
-https://blogs.sap.com/2020/07/17/principal-propagation-in-a-multi-cloud-solution-between-microsoft-azure-and-sap-cloud-platform-scp/<br>
-https://blogs.sap.com/2020/10/01/principal-propagation-in-a-multi-cloud-solution-between-microsoft-azure-and-sap-cloud-platform-scp-part-ii/
-        
+- [Principal propagation in a multi-cloud solution between Microsoft Azure and SAP Business Technology Platform (BTP), Part I: Building the foundation](https://blogs.sap.com/2020/07/17/principal-propagation-in-a-multi-cloud-solution-between-microsoft-azure-and-sap-cloud-platform-scp/)
+- [Principal propagation in a multi-cloud solution between Microsoft Azure and SAP Business Technology Platform (BTP), Part II: Connecting the system on-premise](https://blogs.sap.com/2020/10/01/principal-propagation-in-a-multi-cloud-solution-between-microsoft-azure-and-sap-cloud-platform-scp-part-ii/)
 
 ## Known Issues
 
 Below are some known issues and updates that need to be considered during implementation. There will be updates to the repository and updates for the below. Please do pull the latest version and redeploy the application to SAP BTP.
 
-Mobile device optimization
+*Mobile device optimization*
     The adaptive cards are not yet optimized for picture-perfect mobile rendering. Whereas the functionality is given, the appearance of the mobile interface could be improved. This could be another challenge when optimizing the extension app for your personal needs.
 
-User and admin consent
+*User and admin consent*
     User and a potential admin consent have not been in scope for this application. Please ensure you're granting admin consent in Azure Active Directory for the application registration to prevent potential consent issues when calling APIs.
 
 
