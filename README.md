@@ -1,6 +1,6 @@
-# Create Supplier Collaboration by Extending SAP S/4HANA into Microsoft Azure Ecosystem
-
 [![REUSE status](https://api.reuse.software/badge/github.com/SAP-samples/btp-msteams-s4-suppliercollab)](https://api.reuse.software/info/github.com/SAP-samples/btp-msteams-s4-suppliercollab)
+
+# Create Supplier Collaboration by Extending SAP S/4HANA into Microsoft Azure Ecosystem
 
 # Description
 This repository contains code samples and instructions for developing a native Microsoft Teams application and SAP BTP Extension application for extending SAP S/4HANA Business scenarios into Microsoft Azure ecosystem.
