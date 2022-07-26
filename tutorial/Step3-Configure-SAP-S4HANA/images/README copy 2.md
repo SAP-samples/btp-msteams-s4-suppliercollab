@@ -80,7 +80,7 @@ In this sub-step, you will create a destination to maintain the rest URL of the 
 16. Provide a unique name for the destination and select the **Connection Type** as **G HTTP Connection to external server**.<br>
 ![Destination](./images/17.png)
 
-17. Copy the **URI** from **Step 14** and paste it in **Host** input box and use **443** as the port.<br>
+17. Copy the **URI** from **Step 21** and paste it in **Host** input box and use **443** as the port.<br>
 ![Destination](./images/18.png)
     >Note: Host should not have **https** while pasting in the **uri**
 
@@ -92,15 +92,15 @@ In this sub-step, you will create a destination to maintain the rest URL of the 
 ![Connection Result](./images/21.png)
 
 #### <ins> Configure the oAuth profile <ins>
-In this sub-step, you will configure the OAuth client, which will be used by the destination from **Step 16** to connect to Event Mesh.<br>
+In this sub-step, you will configure the OAuth client, which will be used by the destination from **Step 22** to connect to Event Mesh.<br>
 
 20. Open transaction **OA2C_CONFIG**, which will open a web application in your browser, and click **Create** to create an OAuth client.<br>
 ![OAuth Create](./images/22.png)
 
-21. Select the drop down value **/IWXBE/MGW_MQTT** in the field **OAuth 2.0 Client Profile**, enter a unique name in the **Configuration Name** and **OAuth 2.0 Client ID** value from **Step 14** : **Clientid**.<br>
+21. Select the drop down value **/IWXBE/MGW_MQTT** in the field **OAuth 2.0 Client Profile**, enter a unique name in the **Configuration Name** and **OAuth 2.0 Client ID** value from **Step 21** : **Clientid**.<br>
 ![OAuth Client Details](./images/23.png)
 
-22. Scroll down and enter **clientsecret** and **tokenendpoint** from **Step 14**.<br>
+22. Scroll down and enter **clientsecret** and **tokenendpoint** from **Step 21**.<br>
 ![Additiona details](./images/24.png)
 
 22. Select the radio buttons **Form Fields**, **Header Field** and **Client Credentials** as shown in the screenshot.<br>
@@ -134,35 +134,55 @@ You will also maintain the URI for the Event mesh in the **CONNECT_TO_EM** metho
 In this step, you will automate the report from **Step 25** to run in the background every day morning to send all the Purchase orders with pending supplier confirmations to the Event Mesh.
 
 42. Open the Transaction **SM36** and click **Job Wizard** to create a new background job.<br>
-![SM36](./images/37.png)
+![SM36](./images/s4/37.png)
 
 43. Click **Continue**.<br>
-![SM36 Step 2](./images/38.png)
+![SM36 Step 2](./images/s4/38.png)
 
 44. Enter a unique name in **Job Name** input box and click **Continue**.<br>
-![SM36 Step 3](./images/39.png)
+![SM36 Step 3](./images/s4/39.png)
 
 45. Select **ABAP Program Step** and click **Continue**.<br>
-![SM36 Step 4](./images/40.png)
+![SM36 Step 4](./images/s4/40.png)
 
-46. Enter the report name from **Step 25** and click **Continue**.<br>
-![SM36 Step 5](./images/41.png)
+46. Enter the report name from **Step 37** and click **Continue**.<br>
+![SM36 Step 5](./images/s4/41.png)
 
 47. click **Continue**.<br>
-![SM36 Step 6](./images/42.png)
+![SM36 Step 6](./images/s4/42.png)
 
-48. Select the radio button **Date/time** and click **Continue**.<br>
-![SM36 Step 7](./images/43.png)
+48. Select the radio button **Immediately** and click **Continue**.<br>
+![SM36 Step 7](./images/s4/43.png)
 
-49. Select the check box **Period** and provide the start date & time(moring 8 or the time you choose to run this backgroundjob everyday) as show in the screenshot.<br>
-![SM36 Step 8](./images/44.png)
+49. Select the check box **Period** as show in the screenshot.<br>
+![SM36 Step 8](./images/s4/44.png)
 
-50. Now select **Daily** to the run this job on a daily basis and click **Continue** button.<br>
-![SM36 Step 9](./images/45.png)
+50. Now select **None of the above** and click **Other Periods** button.<br>
+![SM36 Step 9](./images/s4/45.png)
 
-1.  Click **Complete** to schedule the background job.<br>
-![SM36 Step 11](./images/47.png)
+51. Enter **1** in **Minute(s)** input box, so the background job will run for every 1 minute and click **Create** and then click **Continue**.<br>
+![SM36 Step 10](./images/s4/46.png)
 
-You have now completed the creation of the background job that will send all the purchase orders with pending supplier confirmations every day in the morning.
+52. Click **Complete** to schedule the background job.<br>
+![SM36 Step 11](./images/s4/47.png)
 
-Congratulations!! Now you have completed the creation of the RAP based OData service, and configured the background job to send the pending supplier confirmations to Event Mesh.
+You have now completed the creation of the background job that will send the newly created workitems to the Event Mesh every 1 minute.
+
+### Testing: From Creation of PR to verifying the message in Event Mesh
+Let's create a new Purchase Requisition and go to Event Mesh to see the message details.
+
+53. Repeat the **Steps 12 - 14** to create a new Purchase Requisition and initiate a new Approval workflow. The background job will send the workitem information to the Event Mesh Queue in a minute.
+
+54. Open the Event Mesh application from your subaccount.<br>
+![Message Client](./images/s4/48.png)
+
+55. Go to the Message Client you have created and go to the **Test** tab to consume the message.<br>
+![Message Client](./images/s4/49.png)
+
+56. Select your Queue from the dropdown to see the messages sent to Queue.<br>
+![Queue](./images/s4/50.png)
+
+57. Click on **Consume** to see the message.<br>
+![Consume](./images/s4/51.png)
+
+Congratulations!! Now you have completed the creation of the new Flexible workflow for the Purchase Requisition, configured the background job to send the workitems to Event Mesh, and tested it successfully.
