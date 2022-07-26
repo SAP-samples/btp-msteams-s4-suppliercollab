@@ -33,7 +33,7 @@
         "isomorphic-fetch": "^3.0.0",
         "moment": "^2.29.3",
         "moment-timezone": "^0.5.34",
-        "passport": "^0.5.2",
+        "passport": "^0.6.0",
         "passport-azure-ad": "^4.3.1",
         "qs": "^6.10.3",
         "querystring": "^0.2.1",
