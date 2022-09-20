@@ -1,9 +1,6 @@
 import { ActivityTypes } from "botbuilder";
 import { WaterfallDialog } from "botbuilder-dialogs";
 import { NullTelemetryClient, InputHints } from 'botbuilder'
-import core from '@sap-cloud-sdk/core'
-
-import AuthClient from "../../services/AuthClient.js";
 import CancelAndHelpDialog from "./utils/CancelAndHelpDialog.js";
 import SsoOAuthPrompt from "./utils/SsoOAuthPrompt.js";
 import { getLineItemDetailsCard } from "../utils/BotRequestHelper.js";
@@ -67,12 +64,6 @@ class GetLineItemDialog extends CancelAndHelpDialog{
     async getLineItem(stepContext) { 
 
         await stepContext.context.sendActivity({ type : ActivityTypes.Typing });
-
-        const authClient = new AuthClient();
-        const btpOAuthToken = await authClient.getAccessTokenForBtpAccess('', stepContext.result.token);
-        console.log(btpOAuthToken);
-
-
         const selectedPOId = stepContext.context.activity.value.purchaseOrder;
         console.log("GetLineItemDialog :")
         console.log(selectedPOId)
@@ -84,7 +75,7 @@ class GetLineItemDialog extends CancelAndHelpDialog{
         const selectedPurchaseOrderItem = filterItemNum[0];
         console.log(selectedPurchaseOrderItem)
 
-        const purchaseOrderDetails = await this.getPODetailsUsingCloudSdk(POId, btpOAuthToken)
+        const purchaseOrderDetails = await this.getPODetailsUsingCloudSdk(POId, stepContext.result.token)
         console.log(purchaseOrderDetails);
 
         const cardData = {...purchaseOrderDetails[0],selectedPurchaseOrderItem }

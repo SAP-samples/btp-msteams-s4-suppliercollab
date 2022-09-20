@@ -8,12 +8,8 @@ const WATERFALL_DIALOG  = 'WaterfallDialog';
 
 import CancelAndHelpDialog from './utils/CancelAndHelpDialog.js';
 import SsoOAuthPrompt from './utils/SsoOAuthPrompt.js'
-import AuthClient from '../../services/AuthClient.js';
 import GraphClient from '../../services/GraphClient.js';
 import { executeS4API } from '../../services/S4Client.js';
-import core from '@sap-cloud-sdk/core';
-
-
 
 const OAUTH_PROMPT_GRAPH = 'OAuthPromptGraph';
 const OAUTH_PROMPT_BTP = 'OAuthPromptBtp';
@@ -76,13 +72,9 @@ class SearchPODialog extends CancelAndHelpDialog{
      async searchPODetails(stepContext) { 
 
         await stepContext.context.sendActivity({ type : ActivityTypes.Typing });
-        const authClient = new AuthClient();
-        const btpOAuthToken = await authClient.getAccessTokenForBtpAccess('', stepContext.result.token);
-        console.log(btpOAuthToken);
-
 
         const POId = stepContext.context.activity.text;
-        const purchaseOrderDetails = await this.getPODetailsUsingCloudSdk(POId, btpOAuthToken);
+        const purchaseOrderDetails = await this.getPODetailsUsingCloudSdk(POId, stepContext.result.token);
 
         console.log(purchaseOrderDetails);
 

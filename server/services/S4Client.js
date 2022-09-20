@@ -2,6 +2,8 @@ import core from '@sap-cloud-sdk/core'
 import xsenv from '@sap/xsenv'
 
 import AuthClient from "./AuthClient.js";
+import axios from 'axios'
+import https from 'https'
 
 xsenv.loadEnv();
 const sDestinationName = 'S4HANA_PP';
@@ -19,14 +21,14 @@ const createpoconfirmdetails = async (req, res) => {
     const confirmation = req.body;
     const url =`/sap/opu/odata/sap/ZSB_PO_CONF/Confirmation`
     try{
-        const btpToken = await getBTPToken(req);
+        const token = await getAzureToken(req);
         const data = {
             Ebeln: confirmation.poId,
             Ebelp: confirmation.poItemId,
             Eindt: formatDate(confirmation.delDateSupConfirmation),
             Menge: confirmation.quantity.toString()
         };
-        let response = await executeS4API(url,"post",data,btpToken);
+        let response = await executeS4API(url,"post",data,token);
         res.status(201).send(response.data);
     } catch(err){
         res.status(500).send("Error occured");
@@ -40,7 +42,7 @@ const updatepoconfirmdetails =  async (req, res) => {
     const confirmation = req.body;
     const url =`/sap/opu/odata/sap/ZSB_PO_CONF/Confirmation(Ebeln='${poId}',Ebelp='${itemId}',Etens='${seqNo}')`
     try{
-        const btpToken = await getBTPToken(req);
+        const token = await getAzureToken(req);
         const data = {
             Ebeln: confirmation.poId,
             Ebelp: confirmation.poItemId,
@@ -48,7 +50,7 @@ const updatepoconfirmdetails =  async (req, res) => {
             Eindt: formatDate(confirmation.delDateSupConfirmation),
             Menge: confirmation.quantity.toString()
         }
-        let response = await await executeS4API(url,"put",data,btpToken);
+        let response = await executeS4API(url,"put",data,token);
         res.status(204).send("success");
     } catch(err){
         res.status(500).send("Error");
@@ -61,8 +63,8 @@ const deletepoconfirmdetails =  async (req, res) => {
     const seqNo = req.params.seqNo;
     const url =`/sap/opu/odata/sap/ZSB_PO_CONF/Confirmation(Ebeln='${poId}',Ebelp='${itemId}',Etens='${seqNo}')`
     try{
-        const btpToken = await getBTPToken(req);
-        let response = await executeS4API(url,"delete","",btpToken);
+        const token = await getAzureToken(req);
+        let response = await executeS4API(url,"delete","",token);
         res.status(204).send("success");
     } catch(err){
         res.status(500).send("Error");
@@ -73,8 +75,8 @@ const fetchpodetails = async (req, res) => {
     const poId = req.params.poId;
     const url =`/sap/opu/odata/sap/MM_PUR_PO_MAINT_V2_SRV/C_PurchaseOrderTP?$filter=PurchaseOrder eq '${poId}'&$format=json&$expand=to_PurchaseOrderItemTP&$select=PurchasingGroup,Supplier_Text,to_PurchaseOrderItemTP/PurchaseOrderItem`
     try{
-        const btpToken = await getBTPToken(req);
-        let response = await executeS4API(url,"get","",btpToken);
+        const token = await getAzureToken(req);
+        let response = await executeS4API(url,"get","",token);
         res.status(200).send(response.data);
     } catch(err){
         res.status(500).send("Error occured");
@@ -85,10 +87,10 @@ const fetchpodetails = async (req, res) => {
 const fetchpoitemdetails = async (req, res) => {
     const poId = req.params.poId;
     const itemId = req.params.itemId;
-    const btpToken = await getBTPToken(req);
+    const token = await getAzureToken(req);
     const url =`/sap/opu/odata/sap/MM_PUR_PO_MAINT_V2_SRV/C_PurchaseOrderItemTP?$filter=PurchaseOrder eq '${poId}'&PurchaseOrderItem eq '${itemId}'&$expand=to_PlantValueHelp,to_PurOrdSupplierConfirmation,to_PurchaseOrderTP&$select=PurchaseOrderItem,Material,OrderQuantity,PurchaseOrderQuantityUnit,PurgDocOrderAcknNumber,to_PlantValueHelp/PlantName,PurchaseOrderItemText,to_PurchaseOrderTP/PurchaseOrderDate,to_PurOrdSupplierConfirmation/SupplierConfirmationCategory,to_PurOrdSupplierConfirmation/ConfirmedQuantity,to_PurOrdSupplierConfirmation/DeliveryDate,to_PurOrdSupplierConfirmation/ExternalReferenceDocumentID,to_PurOrdSupplierConfirmation/SequentialNmbrOfSuplrConf`
     try{
-    let response = await executeS4API(url,"get","",btpToken);
+    let response = await executeS4API(url,"get","",token);
         if(response.data){
             let poItemDetails = response.data.d.results;
             poItemDetails = poItemDetails.filter(poItem => poItem.PurchaseOrderItem === itemId);
@@ -104,27 +106,28 @@ const fetchpoitemdetails = async (req, res) => {
     }
 }
 
-async function getBTPToken(req){
+async function getAzureToken(req){
     const authHeader = req.headers.authorization;
     const authClient = new AuthClient();
     if (authHeader) {
         const token = authHeader.split(' ')[1];
-        const btpOAuthToken = await authClient.getAccessTokenForBtpAccess('', token);
-        console.log(btpOAuthToken);
-        return btpOAuthToken;
+        return token;
     } else {
         throw new Error('Missing authorization header');
     }
 }
 
-async function executeS4API(url, httpMethod, data, btpToken){
+async function executeS4API(url, httpMethod, data, azureToken){
     const scenario = process.env.SCENARIO;
+    console.log("scenario is : "+scenario);
     let response;
     if (scenario === "azureprivatecloud") {
         console.log("executing using private cloud");
-        response = await executeS4APIUsingPrivateLink(url, httpMethod, data, btpToken);
+        response = await executeS4APIUsingPrivateLink(url, httpMethod, data, azureToken);
     } else {
         console.log("executing using cloud connector");
+        const authClient = new AuthClient();
+        const btpToken = await authClient.getAccessTokenForBtpAccess('',azureToken);
         if(httpMethod === "get"){
             response = await core.executeHttpRequest({ destinationName: sDestinationName,jwt: btpToken}, {
                 method: httpMethod,
@@ -151,15 +154,16 @@ async function executeS4APIUsingPrivateLink(url, httpMethod, data, jwtToken) {
       const s4oauthDestConfigUrl = VCAP_SERVICES.destination[0].credentials.uri + "/destination-configuration/v1/destinations/s4oauth";
       //fetch accesstoken for SAML principal propagation
       const authClient = new AuthClient();
+      const btpDestinationToken = await authClient.getAccessTokenForBtpDestinationAccess('',jwtToken);
       const destinationDetails = await authClient.getDestinationDetails(VCAP_SERVICES.destination[0].credentials, "s4BasicAuth");
-      const samlConfiguration = await authClient.getSamlDestinationConfiguration(s4oauthDestConfigUrl, jwtToken);
+      const samlConfiguration = await authClient.getSamlDestinationConfiguration(s4oauthDestConfigUrl, btpDestinationToken);
       const finalBearerToken = await authClient.getBearerForSAML(destinationDetails, samlConfiguration);
       const finalDestinationDetails = await authClient.getDestinationDetails(VCAP_SERVICES.destination[0].credentials, "s4NoAuth");
       let response = await callS4APIUsingPrivateLink(finalDestinationDetails, finalBearerToken, url, httpMethod, data);
       return response;
     }
     catch (err) {
-      console.log("Test Message error " + err);
+      console.log("Error while executing using PrivateLink is " + err);
       throw err;
     }
 }
@@ -174,15 +178,19 @@ async function callS4APIUsingPrivateLink(finalDestinationDetails, finalBearerTok
     let finalHeaders = {
         'Authorization': `Bearer ${finalBearerToken}`
     }
-    if(!httpMethod.equals("get")){
+    const agent = new https.Agent({  
+        rejectUnauthorized: false
+    });
+    if(httpMethod !== "get"){
     //fetch csrf token for post/patch/delete methods
         try {
             res = await axios.get(xcsrfUrl,
                 {
-                headers: {
-                    'Authorization': `Bearer ${finalBearerToken}`,
-                    'x-csrf-token': 'fetch'
-                }
+                    headers: {
+                        'Authorization': `Bearer ${finalBearerToken}`,
+                        'x-csrf-token': 'fetch'
+                    },
+                    httpsAgent: agent
                 }
             );
             csrfToken = res.headers['x-csrf-token'];
@@ -202,13 +210,14 @@ async function callS4APIUsingPrivateLink(finalDestinationDetails, finalBearerTok
     try {
       let response = await axios({
         method: httpMethod,
-        url: url,
+        url: xcsrfUrl,
         headers: finalHeaders,
-        data: data
+        data: data,
+        httpsAgent: agent
       })
       return response;
     } catch (err) {
-      console.log("err while calling S4API is : " + err);
+      console.log("Error while calling S4API is : " + err);
       throw err;
     }
   }
