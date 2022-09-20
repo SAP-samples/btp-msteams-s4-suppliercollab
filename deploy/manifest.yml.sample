@@ -9,7 +9,7 @@ applications:
       - wftaskdec-conn-service
       - wftaskdec-dest-service
   env:
-    scenario: ((SCENARIO))
+    SCENARIO: ((SCENARIO))
     BTP_LANDSCAPE: ((BTP_LANDSCAPE))
     BTP_ACCOUNT_NAME: ((BTP_ACCOUNT_NAME))
     XSUAA_CS_URL_SUFFIX: ((XSUAA_CS_URL_SUFFIX))

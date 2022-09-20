@@ -10,6 +10,7 @@
 import querystring from 'querystring'
 import qs from 'qs'
 import axios from 'axios'
+import https from 'https'
 
 class AuthClient {
     constructor(){

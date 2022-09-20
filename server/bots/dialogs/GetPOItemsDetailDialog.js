@@ -67,29 +67,6 @@ class GetPOItemsDetailDialog extends CancelAndHelpDialog{
     async getPOItemsDetail(stepContext) { 
 
         await stepContext.context.sendActivity({ type : ActivityTypes.Typing });
-
-        const authClient = new AuthClient();
-        const btpOAuthToken = await authClient.getAccessTokenForBtpAccess('', stepContext.result.token);
-        console.log(btpOAuthToken);
-
-        /*
-
-        const selectedPOId = stepContext.context.activity.value.purchaseOrder;
-        console.log("getPOItemsDetailDialog :")
-        console.log(selectedPOId)
-
-        const filterArr = stepContext.context.activity.text.split(' ').filter(item => Number(item) && item.length == 10 );
-        const POId = filterArr[0];
-
-        const filterItemNum = stepContext.context.activity.text.split(' ').filter(item => Number(item) && item.length == 5 );
-        const selectedPurchaseOrderItem = filterItemNum[0];
-        console.log(selectedPurchaseOrderItem)
-
-        const purchaseOrderDetails = await this.getPRDetailsUsingCloudSdk(POId, btpOAuthToken)
-        console.log(purchaseOrderDetails);
-
-        const cardData = {...purchaseOrderDetails[0],selectedPurchaseOrderItem }
-        */
         const cardData = stepContext.context.activity.value.dataStore;
         const card = await getPOItemsDetailCard(cardData, stepContext.values.graphData);
         return await stepContext.context.sendActivity({ attachments: [card] });

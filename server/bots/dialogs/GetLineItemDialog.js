@@ -1,13 +1,10 @@
 import { ActivityTypes } from "botbuilder";
 import { WaterfallDialog } from "botbuilder-dialogs";
 import { NullTelemetryClient, InputHints } from 'botbuilder'
-import core from '@sap-cloud-sdk/core'
-
-import AuthClient from "../../services/AuthClient.js";
 import CancelAndHelpDialog from "./utils/CancelAndHelpDialog.js";
 import SsoOAuthPrompt from "./utils/SsoOAuthPrompt.js";
 import { getLineItemDetailsCard } from "../utils/BotRequestHelper.js";
-import GraphClient from "../../services/GraphClient.js";
+import { executeS4API } from '../../services/S4Client.js';
 
 const WATERFALL_DIALOG  = 'WaterfallDialog';
 
@@ -67,12 +64,6 @@ class GetLineItemDialog extends CancelAndHelpDialog{
     async getLineItem(stepContext) { 
 
         await stepContext.context.sendActivity({ type : ActivityTypes.Typing });
-
-        const authClient = new AuthClient();
-        const btpOAuthToken = await authClient.getAccessTokenForBtpAccess('', stepContext.result.token);
-        console.log(btpOAuthToken);
-
-
         const selectedPOId = stepContext.context.activity.value.purchaseOrder;
         console.log("GetLineItemDialog :")
         console.log(selectedPOId)
@@ -84,7 +75,7 @@ class GetLineItemDialog extends CancelAndHelpDialog{
         const selectedPurchaseOrderItem = filterItemNum[0];
         console.log(selectedPurchaseOrderItem)
 
-        const purchaseOrderDetails = await this.getPRDetailsUsingCloudSdk(POId, btpOAuthToken)
+        const purchaseOrderDetails = await this.getPODetailsUsingCloudSdk(POId, stepContext.result.token)
         console.log(purchaseOrderDetails);
 
         const cardData = {...purchaseOrderDetails[0],selectedPurchaseOrderItem }
@@ -93,28 +84,22 @@ class GetLineItemDialog extends CancelAndHelpDialog{
             const card = await getLineItemDetailsCard(cardData, stepContext.values.graphData);
             return await stepContext.context.sendActivity({ attachments: [card] });
         }else{
-            const didntUnderstandMessageText = `Sorry, I didn't get paurchse order details for ${POId}. Please try asking in a different way.`;
+            const didntUnderstandMessageText = `Sorry, I didn't get purchase order details for ${POId}. Please try asking in a different way.`;
              await stepContext.context.sendActivity(didntUnderstandMessageText, didntUnderstandMessageText, InputHints.IgnoringInput);
         }
 
         return await stepContext.endDialog();
     }
 
-    async  getPRDetailsUsingCloudSdk(POId, jwtToken){
-
-        const url =`sap/opu/odata/sap/MM_PUR_PO_MAINT_V2_SRV/C_PurchaseOrderTP?$filter=PurchaseOrder eq '${POId}' &$format=json&$expand=to_PurchaseOrderItemTP/to_PurOrdSupplierConfirmation&$select=PurchaseOrder,PurchaseOrderType,PurchasingGroup,PurchaseOrderTypeName,ManufacturerMaterial,Plant,Supplier_Text,PurchaseOrderDate,to_PurchaseOrderItemTP/PurchaseOrderItem,to_PurchaseOrderItemTP/OrderPriceUnit, to_PurchaseOrderItemTP/OrderQuantity, to_PurchaseOrderItemTP/Plant, to_PurchaseOrderItemTP/Material,to_PurchaseOrderItemTP/to_PurOrdSupplierConfirmation/SupplierConfirmationCategory,to_PurchaseOrderItemTP/to_PurOrdSupplierConfirmation/DeliveryDate,to_PurchaseOrderItemTP/to_PurOrdSupplierConfirmation/DelivDateCategory,to_PurchaseOrderItemTP/to_PurOrdSupplierConfirmation/DeliveryTime,to_PurchaseOrderItemTP/to_PurOrdSupplierConfirmation/ConfirmedQuantity`
-        const destName ="S4HANA_PP";
+    async  getPODetailsUsingCloudSdk(POId, jwtToken){
+        const url =`/sap/opu/odata/sap/MM_PUR_PO_MAINT_V2_SRV/C_PurchaseOrderTP?$filter=PurchaseOrder eq '${POId}' &$format=json&$expand=to_PurchaseOrderItemTP/to_PurOrdSupplierConfirmation&$select=PurchaseOrder,PurchaseOrderType,PurchasingGroup,PurchaseOrderTypeName,ManufacturerMaterial,Plant,Supplier_Text,PurchaseOrderDate,to_PurchaseOrderItemTP/PurchaseOrderItem,to_PurchaseOrderItemTP/OrderPriceUnit, to_PurchaseOrderItemTP/OrderQuantity, to_PurchaseOrderItemTP/Plant, to_PurchaseOrderItemTP/Material,to_PurchaseOrderItemTP/to_PurOrdSupplierConfirmation/SupplierConfirmationCategory,to_PurchaseOrderItemTP/to_PurOrdSupplierConfirmation/DeliveryDate,to_PurchaseOrderItemTP/to_PurOrdSupplierConfirmation/DelivDateCategory,to_PurchaseOrderItemTP/to_PurOrdSupplierConfirmation/DeliveryTime,to_PurchaseOrderItemTP/to_PurOrdSupplierConfirmation/ConfirmedQuantity`
         try{
-        let response = await core.executeHttpRequest({ destinationName: destName,jwt: jwtToken }, {
-            method: 'GET',
-            url: url
-        });
-        return response.data.d.results;
+            let response = await executeS4API(url,"get","",jwtToken);
+            return response.data.d.results;
         } catch(err){
             console.log(err)
-            return err
+            return err;
         }
     }
-
 }
 export default GetLineItemDialog;
