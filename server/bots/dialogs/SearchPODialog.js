@@ -10,7 +10,8 @@ import CancelAndHelpDialog from './utils/CancelAndHelpDialog.js';
 import SsoOAuthPrompt from './utils/SsoOAuthPrompt.js'
 import AuthClient from '../../services/AuthClient.js';
 import GraphClient from '../../services/GraphClient.js';
-import core from '@sap-cloud-sdk/core'
+import { executeS4API } from '../../services/S4Client.js';
+import core from '@sap-cloud-sdk/core';
 
 
 
@@ -46,7 +47,7 @@ class SearchPODialog extends CancelAndHelpDialog{
                 this.getGraphToken.bind(this),
                 this.getGraphData.bind(this),
                 this.getBtpToken.bind(this),
-                this.approveWorkflow.bind(this)
+                this.searchPODetails.bind(this)
         ]));
         this.initialDialogId = WATERFALL_DIALOG;
     }
@@ -72,17 +73,16 @@ class SearchPODialog extends CancelAndHelpDialog{
         return await stepContext.next('Success');
     }
 
-     async approveWorkflow(stepContext) { 
+     async searchPODetails(stepContext) { 
 
         await stepContext.context.sendActivity({ type : ActivityTypes.Typing });
-
         const authClient = new AuthClient();
         const btpOAuthToken = await authClient.getAccessTokenForBtpAccess('', stepContext.result.token);
         console.log(btpOAuthToken);
 
 
-        const POId = stepContext.context.activity.text 
-        const purchaseOrderDetails = await this.getPRDetailsUsingCloudSdk(POId, btpOAuthToken)
+        const POId = stepContext.context.activity.text;
+        const purchaseOrderDetails = await this.getPODetailsUsingCloudSdk(POId, btpOAuthToken);
 
         console.log(purchaseOrderDetails);
 
@@ -105,19 +105,15 @@ class SearchPODialog extends CancelAndHelpDialog{
         return await stepContext.endDialog();
     }
 
-    async  getPRDetailsUsingCloudSdk(POId, jwtToken){
+    async  getPODetailsUsingCloudSdk(POId, jwtToken){
 
-        const url =`sap/opu/odata/sap/MM_PUR_PO_MAINT_V2_SRV/C_PurchaseOrderTP?$filter=PurchaseOrder eq '${POId}' &$format=json&$expand=to_PurchaseOrderItemTP/to_PurOrdSupplierConfirmation&$select=PurchaseOrder,PurchaseOrderType,PurchasingGroup,PurchaseOrderTypeName,ManufacturerMaterial,Plant,Supplier_Text,PurchaseOrderDate,to_PurchaseOrderItemTP/PurchaseOrderItem,to_PurchaseOrderItemTP/OrderPriceUnit, to_PurchaseOrderItemTP/OrderQuantity, to_PurchaseOrderItemTP/Plant, to_PurchaseOrderItemTP/Material,to_PurchaseOrderItemTP/to_PurOrdSupplierConfirmation/SupplierConfirmationCategory,to_PurchaseOrderItemTP/to_PurOrdSupplierConfirmation/DeliveryDate,to_PurchaseOrderItemTP/to_PurOrdSupplierConfirmation/DelivDateCategory,to_PurchaseOrderItemTP/to_PurOrdSupplierConfirmation/DeliveryTime,to_PurchaseOrderItemTP/to_PurOrdSupplierConfirmation/ConfirmedQuantity`
-        const destName ="S4HANA_PP";
+        const url =`/sap/opu/odata/sap/MM_PUR_PO_MAINT_V2_SRV/C_PurchaseOrderTP?$filter=PurchaseOrder eq '${POId}' &$format=json&$expand=to_PurchaseOrderItemTP/to_PurOrdSupplierConfirmation&$select=PurchaseOrder,PurchaseOrderType,PurchasingGroup,PurchaseOrderTypeName,ManufacturerMaterial,Plant,Supplier_Text,PurchaseOrderDate,to_PurchaseOrderItemTP/PurchaseOrderItem,to_PurchaseOrderItemTP/OrderPriceUnit, to_PurchaseOrderItemTP/OrderQuantity, to_PurchaseOrderItemTP/Plant, to_PurchaseOrderItemTP/Material,to_PurchaseOrderItemTP/to_PurOrdSupplierConfirmation/SupplierConfirmationCategory,to_PurchaseOrderItemTP/to_PurOrdSupplierConfirmation/DeliveryDate,to_PurchaseOrderItemTP/to_PurOrdSupplierConfirmation/DelivDateCategory,to_PurchaseOrderItemTP/to_PurOrdSupplierConfirmation/DeliveryTime,to_PurchaseOrderItemTP/to_PurOrdSupplierConfirmation/ConfirmedQuantity`
         try{
-        let response = await core.executeHttpRequest({ destinationName: destName,jwt: jwtToken }, {
-            method: 'GET',
-            url: url
-        });
-        return response.data.d.results;
+            let response = await executeS4API(url,"get","",jwtToken);
+            return response.data.d.results;
         } catch(err){
             console.log(err)
-            return err
+            return err;
         }
     }
 }

@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url';
 import express from "express";
 import adapter from "./server/bots/botAdapter.js";
 import botActivityHandler from "./server/bots/BotActivityHandler.js"
-import { getEventPOCard, getPOItemsDetailCard } 
+import { getEventPOCard }
   from "./server/bots/utils/BotRequestHelper.js";
 import s4Router from "./server/api/s4Router.js"
 // imports which rely on env
