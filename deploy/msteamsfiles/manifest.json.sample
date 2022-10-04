@@ -19,8 +19,8 @@
         "full": "SAP Supplier Procurement BOTs"
     },
     "icons": {
-        "color": "icon-color.png",
-        "outline": "icon-outline.png"
+        "color": "s4hana-color.png",
+        "outline": "s4hana-outline.png"
     },
     "accentColor": "#FDA402",
     "staticTabs": [{
