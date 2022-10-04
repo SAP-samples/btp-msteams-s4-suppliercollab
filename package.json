@@ -4,6 +4,10 @@
     "description": "",
     "main": "index.js",
     "type": "module",
+    "engines": {
+        "node": "^14",
+        "npm": "^6"
+    },
     "scripts": {
         "start": "node index.js",
         "push-app": "cd ./deploy && cf push --vars-file vars.yml",
