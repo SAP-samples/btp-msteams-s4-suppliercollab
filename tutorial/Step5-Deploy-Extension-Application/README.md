@@ -135,7 +135,7 @@ Let us clone the codebase and deploy the extension application.
     | --------|---------|
     |Queue Name| Give any name eg. PRApproval|
     |Quality Of Service| 1|
-    |Webhook URL| 'https://'+ Extension Application URL from **(Step 5)**+'/em/pr-workflow'|
+    |Webhook URL| 'https://'+ Extension Application URL from **(Step 5)**+'/em/po-attention '|
     |Exempt Handshake| yes|
     |Authentication| select **OAuth2ClientCredentials**|
     |Client ID| clientid from **(Step 8)**|

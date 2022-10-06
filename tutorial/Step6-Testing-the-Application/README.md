@@ -74,6 +74,10 @@ Congrations - You have updated the supplier confirmations to SAP S/4HANA system 
 
 Congratulations! You have completed the end-to-end Supplier Collboration scenario with Microsoft Teams and SAP S/4HANA.
 
+**Note :**  
+1. The Purchase Order in-meeting app is only available in the Desktop Client of the Teams app and not the Browser version. 
+2. the feature to add/invite someone to the meeting is under development. 
+
 ### Troubleshoot
 
 1. To access Teams admin URL, make sure the Test user has Teams Administrator Role Assignment. This will also help while uploading the application. 
