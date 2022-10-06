@@ -2,7 +2,7 @@
 
 Let us clone the codebase and deploy the extension application. 
 
-1. Clone this GitHub Repository.
+1. Clone this [GitHub](https://github.com/SAP-samples/btp-msteams-s4-suppliercollab) Repository.
 
     Before deployment to the SAP BTP environment, please make sure that you created an **XSUAA instance** in your BTP subaccount as described as mentioned under **XSUAA Instance** in Section **Step 1 - Configure SAP BTP**.
 
@@ -26,11 +26,11 @@ Let us clone the codebase and deploy the extension application.
     ### Environment variables
     The following environment variables need to be set before you deploy the application to SAP BTP or upload it to your MS Teams environment.
 
-    **/deploy/msteamsfiles/vars.yaml**
+    **/deploy/vars.yaml**
 
     | key    | value    |
     | --------|---------|
-    |**SCENARIO**| For S/4HANA  on-premise, the value is "onpremise" and for S/4HANA on Azure Private Cloud, use the value "azureprivatecloud". Please follow the below steps to configure additional settings needed for S/4HANA running on [Azure-Private-Cloud](./tutorial/Azure-Private-Cloud-PrivateLink/README.md)  |
+    |**SCENARIO**| For S/4HANA  on-premise, the value is "onpremise" and for S/4HANA on Azure Private Cloud, use the value "azureprivatecloud". Please follow the below steps to configure additional settings needed for S/4HANA running on [Azure-Private-Cloud](../Private-Link-Service/README.md)  |
     |**BTP_LANDSCAPE**|The region of your BTP subaccount e.g. eu20|
     |**BTP_ACCOUNT_NAME**|The subdomain of your BTP subaccount|
     |**XSUAA_CS_URL_SUFFIX**|The audience which can be extracted from the metadata (https://.authentication./saml/metadata) of your BTP subaccount e.g. azure-live-eu20 or aws-live-eu10|
@@ -59,20 +59,20 @@ Let us clone the codebase and deploy the extension application.
     a) Build your server application
 
     ```console
-    npm run server
+    npm run  build-deploy
     ```
 
     b) Login to your Cloud Foundry subaccount, which you would like to deploy to
 
     ```
-    cf7 login -a `<CF API endpoint e.g. https://api.cf.eu20.hana.ondemand.com/>`
+    cf login -a `<CF API endpoint e.g. https://api.cf.eu20.hana.ondemand.com/>`
     ```
 
     c) Push the application to your dedicated subaccount
 
     ```
     cd deploy
-    cf7 push -f manifest.yml --vars-file vars.yml
+    cf push -f manifest.yml --vars-file vars.yml
     ```
 
     Once the application is deployed, note down the Extension Application URL as shown below
@@ -91,7 +91,7 @@ Let us clone the codebase and deploy the extension application.
     In your manifest.json file, the below parameters need to be updated.<br>
 
 
-    Generate the GUID from command prompt as shown below. 
+    Generate the GUID from command prompt using window PowerShell by invoking the command [guid]:: NewGUID() as shown below. 
     ![plot](./images/guid.png) 
 
     Once the GUID is generated, update the manifest.json file with the below parameter before you upload the manifest definition of your extension app to Microsoft Teams.
@@ -99,9 +99,8 @@ Let us clone the codebase and deploy the extension application.
     **/deploy/msteamsfiles/mainfest.json**
     | key    | value    |
     | --------|---------|
-    |**msteamsappguid-placeholder**|A unique GUID for the MS Teams App. It can be generated using Windows PowerShell by invoking the command [guid]:: NewGUID. This GUID is for the MS Teams environment only and does not equal the Application Registration Client Id.|
+    |**msteamsappguid-placeholder**|A unique GUID for the MS Teams App which you have generated just now. This GUID is for the MS Teams environment and does not equal the Application Registration Client Id.|
     |**msappid-placeholder**|Azure App Registration Client ID of your extension application.|
-    |**msapppassword-placeholder**|Azure App Registration Client Secret, which you created for your extension application.|
     |**domain-placeholder:**|The CF domain of your MS Teams extension.|
 
     Your manifest.json file should reflect the below changes

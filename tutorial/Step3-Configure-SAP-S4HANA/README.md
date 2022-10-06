@@ -10,7 +10,7 @@ In this step, you will create(import the git repo) an OData service using the RA
 >Note: We created this odata service as no standard odata service exists at the time of this git repository creation for SAP S/4HANA 2020
 
 #### <ins> Import ABAP Git Project to run <ins>
-Use the below git URL (ABAP branch) to import the ABAP package, which has the code for the RAP OData service and the background job (which will be discussed in the upcoming steps).
+Use the below git [URL](https://github.com/SAP-samples/btp-msteams-s4-suppliercollab) (ABAP branch) to import the ABAP package, which has the code for the RAP OData service and the background job (which will be discussed in the upcoming steps).
 
 1.  Open **SE38** and execute the program **ZABAPGIT_STANDALONE**.<br>
     >Note: If the above program is not there in the system, use the below link to install ABAP Git<br>
@@ -100,7 +100,7 @@ In this sub-step, you will configure the OAuth client, which will be used by the
 21. Select the drop down value **/IWXBE/MGW_MQTT** in the field **OAuth 2.0 Client Profile**, enter a unique name in the **Configuration Name** and **OAuth 2.0 Client ID** value from **Step 14** : **Clientid**.<br>
 ![OAuth Client Details](./images/23.png)
 
-22. Scroll down and enter **clientsecret** and **tokenendpoint** from **Step 14**.<br>
+22. Scroll down and enter **Client Secret**  from **Step 14** **clientsecret** field as well as enter **Authorization Endpoint**  and **Token Endpoint**   from **Step 14** **tokenendpoint** field <br>
 ![Additiona details](./images/24.png)
 
 22. Select the radio buttons **Form Fields**, **Header Field** and **Client Credentials** as shown in the screenshot.<br>
@@ -123,10 +123,12 @@ When you have imported the ABAP code from git, the background job is also import
 
 27. After the execution of the method: **GET_PENDING_SUPPL_CONF_POS**, the method: **CONNECT_TO_EM** will create the HTTP connection instance to the Event Mesh, which is well explained using the comments in the code.<br>
 ![Execution](./images/36.png)
-You will also maintain the URI for the Event mesh in the **CONNECT_TO_EM** method as shown below:<br>
+You will have to update the queue name in the URI(With NameSpace) in the **CONNECT_TO_EM** method. Save and activate the object below proceeding:<br>
 ![Execution](./images/52.png)
 
-28. Then the **SEND_SUPPL_CONF_PO_TO_EM** method will send the Purchase Orders with pending supplier confirmations to the Event Mesh.<br>
+28. Then the **SEND_SUPPL_CONF_PO_TO_EM** method will send the Purchase Orders with pending supplier confirmations to the Event Mesh. Make sure you update the emailId of the test user in the same method as shown below.<br>
+![UpdateEmail](./images/28-2.png)
+    >**Note**: Also make sure that the emailId assigned to the User in the On-premise system is same as the test user in Azure. 
 ![Constructor](./images/35.png)
     >**Note**: The Destination, OAuth Profile & OAuth Configuration are maintained in the **Contructor** method.
 
