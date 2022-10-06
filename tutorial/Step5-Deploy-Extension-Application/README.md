@@ -46,7 +46,7 @@ Let us clone the codebase and deploy the extension application.
     |**TEAMS_APP_EXTERNAL_ID**|The external AppId of the Teams App
     |**SAP_CLIENT**|sap-client number of your S4/HANA system that you are using|
 
-**Note :** Generate the GUID from command prompt using window PowerShell by invoking the command [guid]:: NewGUID() as shown below and pass this value to the paramenter **TEAMS_APP_EXTERNAL_ID**. The same value  can be passed to the msteamsappguid-placeholder in manifest.json **(Step 7)** 
+**Note :** Generate the GUID from command prompt using window PowerShell by invoking the command [guid]:: NewGUID() as shown below and pass this value to the paramenter **TEAMS_APP_EXTERNAL_ID**. The same value  can be passed to the **msteamsappguid-placeholder** in manifest.json **(Step 7)** 
     ![plot](./images/guid.png) 
 
 4. Open the manifest.yml file to update the application name. This application name needs to be updated in App Registration Configuration in Microsoft Azure.
@@ -93,10 +93,7 @@ Let us clone the codebase and deploy the extension application.
     In your manifest.json file, the below parameters need to be updated.<br>
 
 
-    Use the generated GUID in **Step 3** OR Generate the GUID from command prompt using window PowerShell by invoking the command [guid]:: NewGUID() as shown below. 
-    ![plot](./images/guid.png) 
-
-    Once the GUID is generated, update the manifest.json file with the below parameter before you upload the manifest definition of your extension app to Microsoft Teams.
+    Use the generated GUID in **Step 3** and update the manifest.json file with the below parameter before you upload the manifest definition of your extension app to Microsoft Teams.
 
     **/deploy/msteamsfiles/mainfest.json**
     | key    | value    |
