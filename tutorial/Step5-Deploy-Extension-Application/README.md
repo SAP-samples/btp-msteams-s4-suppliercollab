@@ -122,7 +122,7 @@ Let us clone the codebase and deploy the extension application.
 
     ## Post Deployment Steps
 
-    8. Go to SAP BTP Cockpit. Go to the Subaccount - Services - Instances and Subscriptions. Click on the XSUAA's instance which you are using in this application. Open the service key and get the Credetials details(clientid, clientsecret and url) as mentioned in below screenshot.
+8.  Go to SAP BTP Cockpit. Go to the Subaccount - Services - Instances and Subscriptions. Click on the XSUAA's instance which you are using in this application. Open the service key and get the Credetials details(clientid, clientsecret and url) as mentioned in below screenshot.
     ![plot](./images/servicekey01.png) 
 
     Now Click on the instance for Event Mesh. As this is executed in a trial environment, you will see the plan as a dev for SAP Event Mesh Service.
