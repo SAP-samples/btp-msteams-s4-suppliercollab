@@ -122,14 +122,27 @@ Let us clone the codebase and deploy the extension application.
 
     ## Post Deployment Steps
 
-    Go to SAP BTP Cockpit. Go to the Subaccount - Services - Instances and Subscriptions. Click on the instance for Event Mesh. As this is executed in a trial environment, you will see the plan as a dev for SAP Event Mesh Service.
+    8. Go to SAP BTP Cockpit. Go to the Subaccount - Services - Instances and Subscriptions. Click on the XSUAA's instance which you are using in this application. Open the service key and get the Credetials details(clientid, clientsecret and url) as mentioned in below screenshot.
+    ![plot](./images/servicekey01.png) 
+
+    Now Click on the instance for Event Mesh. As this is executed in a trial environment, you will see the plan as a dev for SAP Event Mesh Service.
     ![plot](./images/btpcockpit-instances.png)
 
-    Before we configure the webhook, 
-    Open the SAP Event Mesh - dev instance, open the service key and get the below credentials. Look for the parameter - protocol, and select the details for HttpRest as shown below.
-    ![plot](./images/servicekey.png)
 
-    With this information , create webhook as shown below 
+    With this following information create webhook as shown below:
+
+    | key    | value    |
+    | --------|---------|
+    |Queue Name| Give any name eg. PRApproval|
+    |Quality Of Service| 1|
+    |Webhook URL| 'https://'+ Extension Application URL from **(Step 5)**+'/em/pr-workflow'|
+    |Exempt Handshake| yes|
+    |Authentication| select **OAuth2ClientCredentials**|
+    |Client ID| clientid from **(Step 8)**|
+    |Client Secret|clientsecret from **(Step 8)**|
+    |Token URL |url from **(Step 8)** + 'oauth/token'|
+
+
     ![plot](./images/em-webhook.png)
 
     If the subscription status is paused, then click on resume subscription.
