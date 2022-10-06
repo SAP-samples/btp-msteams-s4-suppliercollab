@@ -143,7 +143,7 @@ Let us clone the codebase and deploy the extension application.
     |Token URL |url from **(Step 8)** + 'oauth/token'|
 
 
-    ![plot](./images/em-webhook.png)
+    ![plot](./images/em-webhook01.png)
 
     If the subscription status is paused, then click on resume subscription.
 
