@@ -49,7 +49,7 @@ The Supplier Collaboration BOT supports 2 s cenarios.
 9. Edit the Supplier Confirmation details by click the "Edit button" of the respective supplier confirmation.
 ![plot](./images/posupconfirmedit.png)
 
-10.Update the details like quantity and delivery date of the supplier confirmation to SAP S/4HANA system from the in-meeting application by click the save button.
+10. Update the details like quantity and delivery date of the supplier confirmation to SAP S/4HANA system from the in-meeting application by click the save button.
 ![plot](./images/posupconfirmsave.png)
 
 11. You can also create new supplier confirmations and delete the existing supplier confirmations using the in-meeting aplication.
