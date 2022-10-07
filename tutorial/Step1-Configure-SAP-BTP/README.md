@@ -4,14 +4,12 @@ To get started with end-to-end implementation, we will need to perform the below
 
 ## Setup the SAP BTP Subaccount and Initial configurations
 
-Based on your SAP BTP Subscription, you can get started with the setup and configuration. In case you want to use new trial accounts, please refer to the this tutorial 
-Tutorial to create a new trial account ( https://developers.sap.com/tutorials/hcp-create-trial-account.html )
+Based on your SAP BTP Subscription, you can get started with the setup and configuration. In case you want to use new trial accounts, please refer to [this tutorial](https://developers.sap.com/tutorials/hcp-create-trial-account.html) to create a new trial account.
 
 Note: You should be a Global Account Administrator to perform the below steps.
 You can use an existing subaccount / can create a new subaccount. 
 
-If you are new to SAP BTP, follow this tutorial to setup SAP BTP and assign entitlements
-https://developers.sap.com/group.scp-1-get-ready.html
+If you are new to SAP BTP, follow [this tutorial](https://developers.sap.com/group.scp-1-get-ready.html) to setup SAP BTP and assign entitlements
 
 1. Log in to SAP BTP cockpit as Global Account Administrator, navigate to your global account and create a subaccount.
 2. Assign the following entitlements.
