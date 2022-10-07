@@ -44,7 +44,6 @@ Let us clone the codebase and deploy the extension application.
     |**MICROSOFT_APP_PASSWORD**|A Client Secret which you created for your Azure AD App Registration|
     |**MICROSOFT_AD_TENANT_ID**|The unique Id of your Azure Active Directory|
     |**TEAMS_APP_EXTERNAL_ID**|The external AppId of the Teams App
-    |**SAP_CLIENT**|sap-client number of your S4/HANA system that you are using|
 
 **Note :** Generate the GUID from command prompt using window PowerShell by invoking the command [guid]:: NewGUID() as shown below and pass this value to the paramenter **TEAMS_APP_EXTERNAL_ID**. The same value  can be passed to the **msteamsappguid-placeholder** in manifest.json **(Step 7)** 
 
