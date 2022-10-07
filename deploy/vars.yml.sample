@@ -1,5 +1,5 @@
 SCENARIO: <<Placeholder azureprivatecloud or onpremise >>
-BTP_LANDSCAPE: <<Placeholder e.g. eu20 >>
+BTP_LANDSCAPE: <<Placeholder e.g. region >>
 BTP_ACCOUNT_NAME: <<Placeholder e.g. teams-app >>
 XSUAA_CS_URL_SUFFIX: <<Placeholder e.g. azure-live-region >>
 BTP_SCOPES: <<Placeholder e.g. api://msteamsappname.cfapps.region.hana.ondemand.com/botid-123asdf-sd32d-asd32-12df-dlkjadsuo19/access_as_user >>
