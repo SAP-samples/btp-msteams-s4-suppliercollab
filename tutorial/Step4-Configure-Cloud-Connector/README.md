@@ -79,13 +79,13 @@ In the SCC admin cockpit firstly make sure you select the right one in case you 
 
 Follow the wizard which opens up to create a HTTPS mapping.
 
+The **Back-end Type** to be selected as ABAP and **Protocol** as HTTPS.
+
 **Internal Host** is the hostname or ip address of the backend system and the corresponding ICM port
 
 **Virtual Host** is the host name you will be using in the SAP BTP, you can select the default value which are the same as the Internal Host or select another less revealing name.
 
-The **Principal Type** we will change it to **Principal Propagation**.
-
-The **Backend Type** to be selected as ABAP and Protocol as HTTPS.
+Select Principal Type as "X.509 Certificate (Strict Usage)".
 
 Lastly you get a summary of the entered data and if you like you can tick the **Check Internal Host** which will perform a simple check to verify that the mapping is working.
 
