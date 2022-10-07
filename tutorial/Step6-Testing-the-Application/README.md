@@ -49,7 +49,8 @@ The Supplier Collaboration BOT supports 2 s cenarios.
 9. Edit the Supplier Confirmation details by click the "Edit button" of the respective supplier confirmation.
 ![plot](./images/posupconfirmedit.png)
 
-10.Update the details like quantity and delivery date of the supplier confirmation to SAP S/4HANA system from the in-meeting application by click the save button.
+10. Update the details like quantity and delivery date of the supplier confirmation to SAP S/4HANA system from the in-meeting application by click the save button.
+
 ![plot](./images/posupconfirmsave.png)
 
 11. You can also create new supplier confirmations and delete the existing supplier confirmations using the in-meeting aplication.
@@ -73,3 +74,26 @@ Congrations - You have updated the supplier confirmations to SAP S/4HANA system 
 5. Collaborate with the supplier by following the above scenario 1 steps from step 5 to step 11.
 
 Congratulations! You have completed the end-to-end Supplier Collboration scenario with Microsoft Teams and SAP S/4HANA.
+
+**Note :**  
+1. The Purchase Order in-meeting app is only available in the Desktop Client of the Teams app and not the Browser version. 
+2. the feature to add/invite someone to the meeting is under development. 
+
+### Troubleshoot
+
+1. To access Teams admin URL, make sure the Test user has Teams Administrator Role Assignment. This will also help while uploading the application. 
+
+2. Add Microsoft Teams Exploratory license to the test user, especially the Exchange Online (Plan 1) License without which some resources like https://graph.microsoft.com/v1.0/me/calendar might not be available with graph api. 
+
+3. In S/4Hana On-premise system, Before Importing the ABAP Project (Open SE38 and execute the program ZABAPGIT_STANDALONE), Add a step to import GitHub certificate as mentioned here. Otherwise, we will get SSL certificate errors. 
+
+4. In 2020 and higher S/4Hana On-premise system, the Clone Repository is not present in Abap Git program. On creating the online repository, a local copy is created automatically. So, the Clone Online Repo step can be avoided in these systems and directly the Pull step can be executed. 
+
+5. In case of Unauthorized error in Webhook, Make sure that the role created by uaa instance is added to the Role Collection mapped in the Trust config. If this also does not solve the Issue the Role Collection should be added to the user with the custom IDP. 
+
+6. In case of Unauthorized error in destination, Principal Type can be changed to X.509 Certificate (Strict Usage) in cloud configuration. 
+
+7. Add a step to debug the issues got while publishing the Service Binding – ZSB_PO_CONF in eclipse. In my case, the binding was corrupted so pull command in AbapGit was failing. So I created a new Service Binding and updated the URL in S4Client.js. 
+
+8. In the Azure BOT, make sure to Pass all the scopes while adding the Graph Connection to prevent this issue. When we test the connection, we have to test with Test User and Provide all the permissions for the user
+

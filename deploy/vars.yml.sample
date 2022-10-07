@@ -12,3 +12,5 @@ MICROSOFT_APP_ID: <<Placeholder e.g. 123asdf-sd32d-asd32-12df-dlkjadsuo19 >>
 MICROSOFT_APP_PASSWORD: <<Placeholder e.g. A%D*G-KaPaj28adsfSA5v8y/B?E(H+MbQ >>
 MICROSOFT_AD_TENANT_ID: <<Placeholder e.g. ad084394-1234-asdf-5678-adsf243113d6c >>
 TEAMS_APP_EXTERNAL_ID: <<Placeholder e.g. sa084394-sada-asdf-3455-qew2432>>
+ATTENDEES_EMAILADDRESS: <<Placeholder e.g.carol.bush@spte.onmicrosoft.com>>
+ATTENDEES_NAME: <<Placeholder e.g.carol bush>>

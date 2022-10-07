@@ -4,27 +4,27 @@
 
 ### Recommended Architecture to connect to SAP S/4HANA on Azure using SAP BTP Connectivity Service.
 
-![plot](../../images/Architecture-CC.png)
+![plot](./images/Architecture-CC.png)
 
 ## Prerequisites
 
 **SAP S/4HANA on Azure**
 
-**SAP Business Technology Platform **
+**SAP Business Technology Platform**
 
 - Cloud Foundry Subaccount
     >
-    > - Foundation for running the MS Teams extension application.
-    > - Required for Azure AD - SAP BTP Trust Configuration
-    > - Required to connect to  SAP S/4HANA using SAP Cloud connector
+    >- Foundation for running the MS Teams extension application.
+    >- Required for Azure AD - SAP BTP Trust Configuration
+    >- Required to connect to SAP S/4HANA using SAP Cloud connector
     >
 - Connectivity Service
     >
-    > - Required to establish connectivity between SAP S/4HANA and a SAP BTP application.
+    >- Required to establish connectivity between SAP S/4HANA and a SAP BTP application.
     >
 - Destination Service
     >
-    > - Required to consume SAP S/4HANA API or ODATA service using SAP BTP application.
+    >- Required to consume SAP S/4HANA API or ODATA service using SAP BTP application.
 
 ## Configuration
 
@@ -84,6 +84,8 @@ Follow the wizard which opens up to create a HTTPS mapping.
 **Virtual Host** is the host name you will be using in the SAP BTP, you can select the default value which are the same as the Internal Host or select another less revealing name.
 
 The **Principal Type** we will change it to **Principal Propagation**.
+
+The **Backend Type** to be selected as ABAP and Protocol as HTTPS.
 
 Lastly you get a summary of the entered data and if you like you can tick the **Check Internal Host** which will perform a simple check to verify that the mapping is working.
 
@@ -160,7 +162,7 @@ click on the Create Sample Certificate button
 <br/>
 <img src="./images/create_cert.png" width="75%" height="75%">
 
-
+**Note :** Please use your test user while creating the sample certificate.  
 This sample certificate is used to define the rules in the SAP S/4HANA On-premise system under the Transaction code (CERTRULE).
 
 <br/>
@@ -177,7 +179,7 @@ Go to Cloud To On-Premise → Principal Propagation tab. Click on the Synchroniz
 
 
 **Configure Backend System details in Cloud Connector** <br/>
-Create a new System Mapping and provide the Internal and Virtual host details. Choose the Protocol as HTTPS and Principal Type as 509 Certificate (General Usage).
+Create a new System Mapping with backend type **ABAP** and also provide the Internal and Virtual host details. Choose the Protocol as HTTPS. Principal Type cannot be Principal Propagation directly, It should either be X.509 Certificate (General Usage) or X.509 Certificate (Strict Usage). 
 
 <br/>
 <img src="./images/system_mapping.png" width="80%" height="80%">
@@ -279,7 +281,6 @@ Enter the following configuration values:<br/>
   | key | value |
   |  --- | --- |
   |  sap-client | your client no |
-  |  TrustAll | true |
   |  HTML5.DynamicDestination | true |
   |  WebIDEEnabled | true |
   | WebIDEUsage | odata_abap |
@@ -301,7 +302,6 @@ Enter the following configuration values:<br/>
    | key | value |
    | --- | --- |
    | sap-client | your client no |
-   | TrustAll | true |
    | HTML5.DynamicDestination | true |
    | WebIDEEnabled | true |
    | WebIDEUsage | odata_abap |
