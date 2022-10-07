@@ -67,7 +67,7 @@ Let us clone the codebase and deploy the extension application.
     b) Login to your Cloud Foundry subaccount, which you would like to deploy to
 
     ```
-    cf login -a `<CF API endpoint e.g. https://api.cf.eu20.hana.ondemand.com/>`
+    cf login -a `<CF API endpoint e.g. https://api.cf.region.hana.ondemand.com/>`
     ```
 
     c) Push the application to your dedicated subaccount

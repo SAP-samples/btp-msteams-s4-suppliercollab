@@ -124,7 +124,9 @@ When you have imported the ABAP code from git, the background job is also import
 
 27. After the execution of the method: **GET_PENDING_SUPPL_CONF_POS**, the method: **CONNECT_TO_EM** will create the HTTP connection instance to the Event Mesh, which is well explained using the comments in the code.<br>
 ![Execution](./images/36.png)
-You will have to update the queue name in the URI(With NameSpace) in the **CONNECT_TO_EM** method. Save and activate the object below proceeding:<br>
+You will have to update the queue name in the URI(With NameSpace) in the **CONNECT_TO_EM** method. 
+**Note :** The name space should be modified to match the one provided in the em instance. 
+Save and activate the object below proceeding:<br>
 ![Execution](./images/52.png)
 
 28. Then the **SEND_SUPPL_CONF_PO_TO_EM** method will send the Purchase Orders with pending supplier confirmations to the Event Mesh. Make sure you update the emailId of the test user in the same method as shown below.<br>

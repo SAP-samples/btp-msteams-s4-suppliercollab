@@ -8,6 +8,7 @@ lerna-debug.log*
 package-lock.json
 teamsAppManifest/local/*
 xs-security.json
+xs-security-sample.json
 manifest.yml
 vars.yml
 
