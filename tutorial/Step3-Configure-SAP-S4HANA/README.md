@@ -10,7 +10,7 @@ In this step, you will create(import the git repo) an OData service using the RA
 >Note: We created this odata service as no standard odata service exists at the time of this git repository creation for SAP S/4HANA 2020
 
 #### <ins> Import ABAP Git Project to run <ins>
-Use the below git [URL](https://github.com/SAP-samples/btp-msteams-s4-suppliercollab) (ABAP branch) to import the ABAP package, which has the code for the RAP OData service and the background job (which will be discussed in the upcoming steps).
+Use the GitHub [ABAP Branch URL ](https://github.com/SAP-samples/btp-msteams-s4-suppliercollab/tree/abap) to import the ABAP package, which has the code for the RAP OData service and the background job (which will be discussed in the upcoming steps).
 
 1.  Open **SE38** and execute the program **ZABAPGIT_STANDALONE**.<br>
     >Note: If the above program is not there in the system, use the below link to install ABAP Git<br>
@@ -68,7 +68,7 @@ In this sub-step, you will create a service key for your Event Mesh instance, wh
 13. Click **View** to open the **Service Key**.<br>
 ![View Service Key](./images/14.png)
 
-14. Scroll down to the **httprest** protocol and note the **Clientid**, **Clientsecret, **tokenendpoint**, and URI**, which you will use in the upcoming steps.<br>
+14. Scroll down to the **httprest** protocol and note the **clientid**, **clientsecret, **tokenendpoint**, and uri**, which you will use in the upcoming steps.<br>
 ![Note the service key details](./images/15.png)
 
 #### <ins>Create the Destination<ins>
@@ -100,7 +100,8 @@ In this sub-step, you will configure the OAuth client, which will be used by the
 21. Select the drop down value **/IWXBE/MGW_MQTT** in the field **OAuth 2.0 Client Profile**, enter a unique name in the **Configuration Name** and **OAuth 2.0 Client ID** value from **Step 14** : **Clientid**.<br>
 ![OAuth Client Details](./images/23.png)
 
-22. Scroll down and enter **Client Secret**  from **Step 14** **clientsecret** field as well as enter **Authorization Endpoint**  and **Token Endpoint**   from **Step 14** **tokenendpoint** field <br>
+22. Scroll down and update the values for **Client Secret**  from **Step 14** **clientsecret** field as well as enter **Authorization Endpoint**  and **Token Endpoint**   from **Step 14** **tokenendpoint** field <br>
+
 ![Additiona details](./images/24.png)
 
 22. Select the radio buttons **Form Fields**, **Header Field** and **Client Credentials** as shown in the screenshot.<br>
