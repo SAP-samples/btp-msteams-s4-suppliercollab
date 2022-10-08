@@ -89,7 +89,7 @@ The required Role Collection Mapping on the SAP BTP side will be done in one of 
 
 ## 5. SAP BTP Role Collection Mapping
 
-Please check: In the SAP BTP configurations, you would have created a role collection s4hana_procurement. You will need to update this Role collection with the GroupID detail from Azure.
+Please check: In the SAP BTP configurations, you would have created a role collection s4hana_procurement if not please create it . You will need to update this Role collection with the GroupID detail from Azure.
 
 Copy the Group ID from the created group (s4businessusersgrp)
 ![plot](./images/objectid-group.png)
