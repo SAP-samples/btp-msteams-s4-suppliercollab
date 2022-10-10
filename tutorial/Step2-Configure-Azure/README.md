@@ -22,14 +22,10 @@ Once you have registered, you will be able to see the following list of Azure se
 
 
 
+## 1. Create tenant in Microsoft Azure - Azure Active Directory
+Login to [Azure portal](http://portal.azure.com). Select Azure Active Directory. You should be able to see the below information in the Overview of Default Directory.
 
-## 1. Azure Services - Azure Active Directory
-Go to Azure Services and select Azure Active Directory. You should be able to see the below information in the Overview of Default Directory.
-
-The default directory as below 
-![plot](./images/default-directory.png)
-
-Option to create and manage tenants
+Below is the option to create and manage tenants
 ![plot](./images/tenant-defaultdirectory.png)
 
 
