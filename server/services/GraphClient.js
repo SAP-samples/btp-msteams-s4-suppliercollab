@@ -100,8 +100,8 @@ class GraphClient {
         attendees: [
           {
             emailAddress: {
-              address: 'caroline.bushell@saptfe.onmicrosoft.com',
-              name: 'caroline bushell'
+              address: process.env.ATTENDEES_EMAILADDRESS,
+              name: process.env.ATTENDEES_NAME
             },
             type: 'required'
           }

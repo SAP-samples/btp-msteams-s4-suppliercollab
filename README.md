@@ -3,33 +3,33 @@
 # Create Supplier Collaboration by Extending SAP S/4HANA into Microsoft Azure Ecosystem
 
 # Description
-This repository contains code samples and instructions for developing a native Microsoft Teams application and SAP BTP Extension application for extending SAP S/4HANA Business scenarios into Microsoft Azure ecosystem.
+This repository contains code samples and instructions for developing a native Microsoft Teams application and an extension application deployed in SAP BTP for extending SAP S/4HANA business  scenarios into Microsoft Azure ecosystem.
 
 Important: Please be aware that this GitHub repository will be updated with additional scenarios.Make sure you are pulling the repository from time to time and do a redeployment to SAP Business Technology Platform.
 
 # Scenario
-This is one of the use-case in Procure-To-Pay process.
-Requestor creates a Purchase Order with required line items. The operations Manager / Purchase Manger needs to receive the same for approval and look for closure of the PO. In case of delays, Operations Manager will interact with suppliers to discuss the updates on pending confirmations /delivery overdue on the list of line items. This will help all the stakeholders to discuss, view the purchase order details together and complete the confirmation summary.
+This is one of the use cases in the procure-to-pay business process.
+A requester creates a Purchase Order with the required line items. Operations Manager / Purchase Manger needs to receive the same purchase order for approval and look for closure of the PO. In case of delays, the Operations Manager interacts with the suppliers to discuss the updates on pending confirmations /delivery overdue on the list of line items. This will help all the stakeholders to discuss, view the purchase order details together and complete the confirmation summary.
 
 
 # Business Process Flow 
-The target application will provide the SAP Business User to be able to perform ERP operations via MS Teams. Below depicts the business process flow.
+The target application provides the SAP Business User to be able to perform ERP operations via MS Teams. The business process flow is described in the following diagram:
 
 ![plot](./images/businessprocess.png)
 
-Let us look at the user journey of the Requestor and Purchasing/Operations manager persona. 
-1. The requestor creates/updates a purchase order in SAP S/4HANA with a list of line items for a specific supplier. 
+Let us look at the user journey of the Requester and Purchasing/Operations Manager persona. 
+1. The requester creates/updates a purchase order in SAP S/4HANA with a list of line items for a specific supplier. 
 2. For every update on a purchase order , events are published to SAP Event Mesh.
-3. These events are sent to SCM Operations Manager, who is MS Teams Users. The user receives the alerts on updates on Purchase Order.
-4. Operations Manager can request for further PO details before deciding on discussion with Supplier.
-5. Business user decides to setup meeting with supplier to discuss and receive confirmation on unfullfilled POs.
-6. During the meeting , SCM Operation Manager can retrieve additional information on current confirmation summary and update back to SAP S/4HANA.
+3. These events are sent to the SCM Operations Manager, who is MS Teams user. The user receives the alerts on updates on the purchase order.
+4. The Operation Manager can request for further purchase order details before deciding on a discussion with Supplier.
+5. The business user decides to set up meeting with the supplier to discuss and receive confirmation on any unfullfilled POs.
+6. During the meeting, the SCM Operation Manager can retrieve additional information on the current confirmation summary and update it back to SAP S/4HANA.
 
 # Solution Architecture
 
 ## Solution Architecture for SAP S/4HANA on-premise using Cloud Connector and SAP BTP Connectivity Service
 
-The architecture below leverages the Cloud Connector and SAP Connectivity Service to establish secured communication between SAP BTP and SAP S/4HANA seamlessly. We will see how the communication and flow of information work. Principal propagation of the users is enabled using XSUAA. Let us quickly understand how communication happens among the different systems and approaches for the principal propagation of users.
+The architecture below leverages the SAP Cloud Connector and SAP Connectivity Service to establish secured communication between SAP BTP and SAP S/4HANA.Principal propagation of the users is enabled using XSUAA. Let us quickly understand how communication happens among the different systems and approaches for the principal propagation of users.
 
 ![plot](./images/Architecture_CS.png)
 
@@ -56,14 +56,14 @@ The architecture below leveraging the SAP Private Link Service in SAP BTP and Az
 
 ![plot](./images/Architecture_PL.png)
 
-Please look for detailed documentation in the tutorials folder - [Azure-Private-Cloud-PrivateLink](./tutorial/Private-Link-Service/README.md) in case you want to setup as per this architecture. You will also need to perform all the steps mentioned in the Implementation Section. Note: Principal propagation configurations should be set up, which is not optional. We will be updating the codebase to support Basic Authentication for testing purposes; however, this is not recommended.
+Please look for detailed documentation in the tutorials folder - [Azure-Private-Cloud-PrivateLink](./tutorial/Private-Link-Service/README.md) in case you want to set up as per this architecture. You will also need to perform all the steps mentioned in the Implementation Section. Note: Principal propagation configurations should be set up, which is not optional. We will be updating the codebase to support Basic Authentication for testing purposes; however, this is not recommended.
 
 # Requirements
 
-Below are the technical prerequistics for a successful Microsoft Teams - SAP S/4HANA integration. Primarily, we will need SAP S/4HANA configured for Purchase Orders, SAP Business Technology Platform and Microsoft Azure. Below is the list of configurations and services required to implement the end-to-end business flow.
+Below are the technical prerequistics for a successful Microsoft Teams - SAP S/4HANA integration. Primarily, we will need SAP S/4HANA configured for Purchase Orders, SAP Business Technology Platform and Microsoft Azure. Below is the list of services required to implement the end-to-end business scenario.
 
 **SAP S/4HANA On-Premise**
-- 2 business users ( 1st  for the requestor, 2nd for the approver) 
+- 2 business users ( 1st  for the requester, 2nd for the approver) 
 
 **SAP Business Technology Platform Services**
 - Cloud Foundry Subaccount
@@ -126,7 +126,7 @@ Follow the below steps to configure SAP S/4HANA, SAP BTP and Azure System for th
 ## [Step 6: Test E2E Application](./tutorial/Step6-Testing-the-Application/README.md)
 
 Please follow the below steps to configure additional settings needed for SAP S/4HANA running on Azure and SAP BTP on Azure(any region)
-## [Setup and Deployment for SAP S/4HANA on Azure leveraging Private Link Service ](./tutorial/Private-Link-Service/README.md)
+## [Set up and Deployment for SAP S/4HANA on Azure leveraging Private Link Service ](./tutorial/Private-Link-Service/README.md)
 
 ## Additional Resources
 
