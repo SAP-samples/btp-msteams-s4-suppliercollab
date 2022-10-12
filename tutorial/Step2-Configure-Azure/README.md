@@ -100,7 +100,7 @@ Open the Role Collection Mappings for Azure Identity Provider. In this case, we 
 
 All MS Teams users supposed to use the extension application have to be assigned to this Azure AD group. This mapping allows the users (once their identity has been propagated to SAP BTP) to SAP S/4HANA based on their Principal Propagation identity.
 
-Now that we have enabled the trust between SAP BTP and Microsoft Azure and 
+Now that you have enabled the trust between SAP BTP and Microsoft Azure and 
 please perform the steps given in the [Get your Microsoft Azure settings ready](https://blogs.sap.com/2022/02/28/sap-ms-teams-7-get-your-microsoft-azure-settings-ready/) blog post on getting Microsoft Azure ready for registration of an application for MS Teams Extension.
 
 You can refer to the above blog, where similar steps and detailed explanations are provided for the Success Factors Integration example. Here we have provided similar steps in the Azure trial account and provided a screenshot for your quick reference.
@@ -172,7 +172,7 @@ You should be able to see the final configurations below
 Click on Test Connection and test both the OAuth connection settings (GraphConnection and BTPConnection).
 
 When testing the connection, when prompted for user credentials, use the test user created.
-We are using Test User to test the connection.
+You need to use Test User to test the connection.
 ![plot](./images/azure-users.png)
 
 ## 8. Create Azure Storage Account
@@ -198,4 +198,5 @@ With the test user, you created, login to [Microsoft Teams](https://teams.micros
 In case you do not see this, then check for details in the blog post under Section - Microsoft Teams licence. You can assign the licence to the AD users.
 
 This completes all the configurations on the Azure side.
-We will need to revisit and update a few configurations after we complete the deployment of the SAP BTP Extension application.
+
+Post deployment of SAP BTP extension application, few configurations needs to be updated again in Microsoft Azure. 

@@ -1,4 +1,4 @@
-# Connecting to SAP S/4HANA on Azure using SAP BTP Connectivity Service.
+# Connect SAP S/4HANA on-premise using SAP BTP Connectivity Service
 
 ## Solution Architecture
 
@@ -33,7 +33,7 @@
 For the above architecture, let us perform the below set of configurations.
 
 ### Download and install SAP Cloud Connector 
-The SAP Cloud Connector can be downloaded from this link https://tools.hana.ondemand.com/#cloud. If Java is not installed on the server, it is required to install Java.
+The SAP Cloud Connector can be downloaded from [this link](https://tools.hana.ondemand.com/#cloud). If Java is not installed on the server, it is required to install Java.
 
 ![plot](./images/scc_download.png)
 
@@ -41,7 +41,7 @@ You can download the zip archive for your operating system. You need administrat
 
 **Initial Configuration**
 
-To configure the SCC, enter https://hostname:8443 in a browser, where the <hostname> is the hostname of the machine on which the connector is installed, and the port number is the one configured during installation. The default port number is 8443.
+To configure the SCC, Login to [SAP Cloud Connector](https://hostname:8443), where the <hostname> is the hostname of the machine on which the connector is installed, and the port number is the one configured during installation. The default port number is 8443.
 
 <br/>
 <p align="center">
@@ -91,7 +91,7 @@ Lastly you get a summary of the entered data and if you like you can tick the **
 
 Next, we need to add resources to the mapping i.e., services from the backend Select the newly created mapping and click the "+" sign just below to add resources. we make all services available to the subaccount by entering / in the URL path and select **Path And All Sub-Paths** under Access Policy.
 
-As soon as Cloud connector setup is complete you able to see it in your SAP BTP Account.
+As soon as SAP Cloud connector setup is complete you able to see it in your SAP BTP Account.
 
 ![plot](./images/btp-cc.png)
 
@@ -99,9 +99,10 @@ As soon as Cloud connector setup is complete you able to see it in your SAP BTP 
 ## Principal Propagation Setup
 
 Read the below blog post which explains how to setup Principal Propogation as well.\
-https://blogs.sap.com/2021/09/06/setting-up-principal-propagation/
+[Setting up Principal Propogation](https://blogs.sap.com/2021/09/06/setting-up-principal-propagation)
 
-https://blogs.sap.com/2020/10/01/principal-propagation-in-a-multi-cloud-solution-between-microsoft-azure-and-sap-cloud-platform-scp-part-ii
+[Principal propogation in multi-cloud solution]
+(https://blogs.sap.com/2020/10/01/principal-propagation-in-a-multi-cloud-solution-between-microsoft-azure-and-sap-cloud-platform-scp-part-ii)
 
 Principal propagation enables the transmission of the message's user context from the sender to the receiver while maintaining its integrity. 
 
@@ -168,7 +169,7 @@ This sample certificate is used to define the rules in the SAP S/4HANA On-premis
 <br/>
 <img src="./images/cn_email.png" width="75%" height="75%">
 
-### Synchronize the Cloud Subaccount IDP
+### Synchronize with SAP BTP Subaccount Identity Provider
 You can follow the help document on how to add the subaccount in the Cloud connector here.
 
 Go to Cloud To On-Premise → Principal Propagation tab. Click on the Synchronize button to sync the Trust Configuration details of the connected subaccount.
@@ -272,7 +273,7 @@ Enter the following configuration values:<br/>
 | --- | --- |
   |  Name | S4HANA_PP |
  |   Type | HTTP |
-  |  URL | The virtual host and port, e.g. http://vhcalnplci:44300 |
+  |  URL | The virtual host and port, e.g. http://virtualhostname:44300 |
   |  Proxy Type | OnPremise |
   |  Authentication | PrincipalPropagation |
 
@@ -291,7 +292,7 @@ Enter the following configuration values:<br/>
    | --- | --- |
    | Name | S4HANA_NP |
    | Type | HTTP |
-   | URL | The virtual host and port, e.g. http://vhcalnplci:44300 |
+   | URL | The virtual host and port, e.g. http://virtualhostname:44300 |
    | Proxy Type | OnPremise |
    | Authentication | BasicAuthentication |
    | User| Technical User |

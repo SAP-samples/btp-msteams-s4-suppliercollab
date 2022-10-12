@@ -1,6 +1,6 @@
 ## Build and Deployment of SAP BTP Extension Application.
 
-Let us clone the codebase and deploy the extension application. 
+In this section you will clone the codebase from GitHub repository and deploy the extension application in SAP BTP.
 
 1. Clone this [GitHub](https://github.com/SAP-samples/btp-msteams-s4-suppliercollab) Repository.
 
@@ -33,14 +33,14 @@ Let us clone the codebase and deploy the extension application.
     |**SCENARIO**| For S/4HANA  on-premise, the value is "onpremise" and for S/4HANA on Azure Private Cloud, use the value "azureprivatecloud". Please follow the below steps to configure additional settings needed for S/4HANA running on [Azure-Private-Cloud](../Private-Link-Service/README.md)  |
     |**BTP_LANDSCAPE**|The region of your BTP subaccount e.g. eu20|
     |**BTP_ACCOUNT_NAME**|The subdomain of your BTP subaccount|
-    |**XSUAA_CS_URL_SUFFIX**|The audience which can be extracted from the metadata (https://.authentication./saml/metadata) of your BTP subaccount e.g. azure-live-eu20 or aws-live-eu10|
+    |**XSUAA_CS_URL_SUFFIX**|The audience which can be extracted from the metadata (https://.authentication./saml/metadata) of your BTP subaccount e.g. azure-live-region or aws-live-eu10|
     |**BTP_SCOPES**|The full name of the custom scope created in Step 2 Configure-Azure from api:// to /access_as_user|
     |**CONNECTION_NAME_GRAPH**|The name of the Graph connection creates in Step 2 Configure-Azure e.g. GraphConnection|
     |**CONNECTION_NAME_BTP**|The name of the BTP connection creates in Step 2 Configure-Azure e.g. BTPConnection|
     |**MICROSOFT_BLOB_CONTAINER_NAME**|The respective values copied in Step 2 - Configure-Azure|
     |**MICROSOFT_BLOB_CONNECTION_STRING**|The respective values copied in Step 2 - Configure-Azure|
-    |**DOMAIN**| The CF domain of your MS Teams extension application e.g. btp-s4-msteams-suppliercollab.cfapps.eu20.hana.ondemand.com |
-    |**MICROSOFT_APP_ID**| The Application Client Id of your Azure AD App Registraiton |
+    |**DOMAIN**| The CF domain of your MS Teams extension application e.g. btp-s4-msteams-suppliercollab.cfapps.region.hana.ondemand.com |
+    |**MICROSOFT_APP_ID**| The Application Client Id of your Azure AD App Registration |
     |**MICROSOFT_APP_PASSWORD**|A Client Secret which you created for your Azure AD App Registration|
     |**MICROSOFT_AD_TENANT_ID**|The unique Id of your Azure Active Directory|
     |**TEAMS_APP_EXTERNAL_ID**|The external AppId of the Teams App
@@ -121,10 +121,10 @@ Let us clone the codebase and deploy the extension application.
 
     ## Post Deployment Steps
 
-8.  Go to SAP BTP Cockpit. Go to the Subaccount - Services - Instances and Subscriptions. Click on the XSUAA's instance which you are using in this application. Open the service key and get the Credetials details(clientid, clientsecret and url) as mentioned in below screenshot.
+8.  Go to SAP BTP Cockpit. Go to the Subaccount > Services > Instances and Subscriptions. Click on the XSUAA's instance which you are using in this application. Open the service key and get the Credetials details(clientid, clientsecret and url) as mentioned in below screenshot.
     ![plot](./images/servicekey01.png) 
 
-    Now Click on the instance for Event Mesh. As this is executed in a trial environment, you will see the plan as a dev for SAP Event Mesh Service.
+    Now Click on the instance for SAP Event Mesh. As this is executed in a trial environment, you will see the plan as a dev for SAP Event Mesh Service.
     ![plot](./images/btpcockpit-instances.png)
 
 
