@@ -1,4 +1,4 @@
-# Connecting to SAP S/4HANA instance on Azure using SAP BTP Private Link Service and Azure Private Link
+# Connect SAP BTP and  SAP S/4HANA instance on Azure using SAP BTP Private Link Service and Azure Private Link
 
 ## Business Process Flow
 
@@ -19,7 +19,7 @@ The target application will provide the SAP Business User to be able to perform 
 ### Recommended Architecture to connect to SAP S/4HANA on Azure using BTP Private Link Service and Azure Private Link
 <br>
 
-![plot](../../images/Architecture-PL.png)
+![plot](../../images/Architecture_PL.png)
 
 ## Prerequisites
 
@@ -28,24 +28,24 @@ The target application will provide the SAP Business User to be able to perform 
 **SAP Business Technology Platform Services**
 
 - Cloud Foundry Subaccount
-    >
-    > - Foundation for running the MS Teams extension application.
-    > - Required for Azure AD - SAP BTP trust
-    > - Required to connect to  S/4HANA instance using Private Link
-    >
+    
+    - Foundation for running the MS Teams extension application.
+    - Required for Azure AD - SAP BTP trust
+    - Required to connect to  S/4HANA instance using Private Link
+    
 - Private Link Service
-    >
-    > - Required to connect to SAP S/4HANA instance using Azure Private Link
-    >
+    
+    - Required to connect to SAP S/4HANA instance using Azure Private Link
+    
 - Destination Service
-    >
-    > - Required to connect to SAP S/4HANA instance using SAP BTP Private Link Service
+    
+    - Required to connect to SAP S/4HANA instance using SAP BTP Private Link Service
 
 **Microsoft Azure**
 
 - Azure Private Link
-    >
-    > - Required to connect to SAP S/4HANA instance from SAP BTP subaccount
+    
+    - Required to connect to SAP S/4HANA instance from SAP BTP subaccount
 
 ## Configuration
 
@@ -53,9 +53,7 @@ The target application will provide the SAP Business User to be able to perform 
 
 **Create Azure Private Link for SAP S/4HANA system**
 
-Please check the following tutorial on how to create Azure Private Link for SAP S/4HANA system on Azure and link it with BTP Private Link Service.
-
-<https://github.com/SAP-samples/btp-build-resilient-apps/tree/extension-privatelink/tutorials/05-PrivateLink>
+Please check the following tutorial on [how to create Azure Private Link for SAP S/4HANA system on Azure and link it with BTP Private Link Service](https://github.com/SAP-samples/btp-build-resilient-apps/tree/extension-privatelink/tutorials/05-PrivateLink)
 
 Complete the steps till "Prepare Extension Application" section using the above blog.
 
@@ -69,7 +67,7 @@ Click New **Destination**.
     --- | --- |
     Name | S4HANA_PL_NP |
     Type | HTTP |
-    URL | <https://[your> private hostname]/  |
+    URL  | https://your private hostname]/  |
     Proxy Type | PrivateLink |
     Authentication | BasicAuthentication |
     User| Technical User |
@@ -87,16 +85,16 @@ Click New **Destination**.
 
 The below steps are needed only if you want to do Principal Propagation from Microsoft Teams and SAP BTP to SAP S/4HANA on Azure.
 
-### oAuth Configuration for SAP S/4HANA and SAP BTP
+### OAuth Configuration for SAP S/4HANA and SAP BTP
 
 Steps:
 
 1. Navigate to your BTP Subaccount
-2. Click on Connectivity -> Destinations
+2. Click on Connectivity > Destinations
 3. Click on "Download IDP Metadata" button to download IDP metadata.<br>
 ![plot](./images/btp-dest-idp-metadata.png)
 4. In SAP S/4HANA (Azure Private Cloud) system, open the transaction "SAML2" or use the below url.<br>
-   **URL** - https://<S/4HANA HOST:PORT>/sap/bc/webdynpro/sap/saml2?sap-client=<client>
+   **URL** - https://s4hanahostname:port>/sap/bc/webdynpro/sap/saml2?sap-client=<client>
 5. Navigate to the **Trusted Providers** tab.<br>
 ![Trusted Providers](./images/Trusted%20Providers%20Tab.png)
 6. In the table **List of Trusted Providers**, choose the value **OAuth 2.0 Identity Providers** from the dropdown as shown below:<br> 
@@ -153,7 +151,7 @@ Now you will use the newly created system userid & the Trusted Provider to regis
 
 
 18. Open the Transaction **SOAUTH2** or use the below URL to configure the oauth and click **Create**.<br>
-**URL** - https://<S/4HANA HOST:PORT>/sap/bc/webdynpro/sap/oauth2_config?sap-client=<client><br>
+**URL** - https://s4hanahostname:port/sap/bc/webdynpro/sap/oauth2_config?sap-client=<client><br>
 ![Create OAuth](./images/Create%20OAuth%20Client.png)
 19. Enter the **User ID** from **Step 15** in the **OAuth 2.0 Client** input box, provide the description and click **Next**.<br>
 ![Step 1 OAuth](./images/Oauth2.0%20step1.png)
@@ -186,7 +184,7 @@ key | value |
 --- | --- |
 Name | s4BasicAuth |
 Type | HTTP |
-URL | <https://[your> private hostname]/ |
+URL | https://your private hostname |
 Proxy Type | PrivateLink |
 Authentication | Basic Authentication (TEAMSCLIENT) |
 scope | ZTASKPROCESSING_0002 |
@@ -207,7 +205,7 @@ key | value |
 --- | --- |
 Name | s4oauth |
 Type | HTTP |
-URL | <https://[your private hostname]/sap/bc/sec/oauth2/token?sap-client=[your client no] > |
+URL | https://your private hostname/sap/bc/sec/oauth2/token?sap-client=[your client no] |
 Proxy Type | PrivateLink |
 Authentication | SAMLAssertion |
 Audience | check Provider Name on **SAML2 backend transaction** |
@@ -223,8 +221,8 @@ HTML5.DynamicDestination | true |
 WebIDEEnabled | true |
 WebIDEUsage | odata_abap |
 nameIdFormat | urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress |
-tokenServiceURL  | <https://[your private hostname]/sap/bc/sec/oauth2/token > |
-assertionRecipient  | <https://[your private hostname]/sap/bc/sec/oauth2/token >|
+tokenServiceURL  | https://your private hostname/sap/bc/sec/oauth2/token |
+assertionRecipient  | https://your private hostname/sap/bc/sec/oauth2/token |
 userSourceId  | email
 
 3. Create destination "s4NoAuth" (This is used for final call to OData without Authentication, we inject the Bearer token from preceeding calls)

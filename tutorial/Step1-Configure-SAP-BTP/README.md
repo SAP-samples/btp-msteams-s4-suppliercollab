@@ -32,20 +32,26 @@ Set up SAP Event Mesh and test a sample application. Follow [SAP Event Mesh](htt
 
 2.2.1 In SAP BTP Enterprise account, you will see the below details in Subscription and Instances. 
 Select the application SAP Event Mesh from Subscription.
+
 ![plot](./images/eventmesh-btp.png)
 
 2.2.2 In SAP BTP trial account, you will see the below details in Subscription and Instances.
+
 ![plot](./images/eventmesh-trial.png)
+
 Go to Instances > Select the Instance for SAP Event Mesh Service and Click on View Dashboard
+
 ![plot](./images/viewdashboard.png)
 
 2.3 Create Queue
 
 2.3.1 In SAP BTP enterprise account, Choose Message Clients and click on Create Queue to create your message client queue.
 Click on Message Client from left panel > Go to Queues > Create Queue
+
 ![plot](./images/btp-emapp.png)
 
 2.3.2 In SAP BTP trial account, click on Queue to create the message client queue.
+
 ![plot](./images/trialaccount-emq.png)
 
 2.4 Create queue with name "POConfirmations" as shown in the below screenshot.
@@ -54,7 +60,7 @@ Click on Message Client from left panel > Go to Queues > Create Queue
 
  
 ### 3.Configure XSUAA Service
-Create a new  [XSUAA]([https://help.sap.com/docs/CP_AUTHORIZ_TRUST_MNG) instance in your dedicated SAP BTP subaccount. This XSUAA instance is required to authenticate access to the extension app's notification endpoint.
+Create a new  [XSUAA](https://help.sap.com/docs/CP_AUTHORIZ_TRUST_MNG) instance in your dedicated SAP BTP subaccount. This XSUAA instance is required to authenticate access to the extension app's notification endpoint.
 ```
 Name: wftaskdec-uaa-service
 Service: Authorization and Trust Management Service (xsuaa)
@@ -97,7 +103,7 @@ Click on Next and enter the following configuration parameters and click on "Cre
 ![plot](./images/btp-uaa-config.png)
 
 ### 4.Configure SAP Destination Service
-Create a new [SAP Destination](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/783fa1c418a244d0abb5f153e69ca4ce.html) instance in your dedicated SAP BTP subaccount. This destination instance lets you find the destination information required to access a remote service or system from your SAP Cloud Foundry application.
+Create a new [SAP Destination Service Instance](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/9fdad3cad92e4b63b73d5772014b380e.html?locale=en-US) in your dedicated SAP BTP subaccount. This destination instance lets you find the destination information required to access a remote service or system from your SAP Cloud Foundry application.
 
 ```
 Name : wftaskdec-dest-service
