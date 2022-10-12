@@ -27,7 +27,6 @@ Once you have registered, you will be able to see the following list of Azure se
 Login to [Azure portal](http://portal.azure.com). Select Azure Active Directory. You should be able to see the below information in the Overview of Default Directory.
 
 Below is the option to create and manage tenants
-
 ![plot](./images/tenant-defaultdirectory.png)
 
 
@@ -69,12 +68,10 @@ Go to Default Directory and click on Users - New User, as shown below.
 ![plot](./images/azure-users.png)
 
 Ensure the email id is updated for the newly created user. This field is important for principal propogation and is required when receiving the events from SAP S/4HANA.The same ID will be configured for the named user in SAP S/4HANA.
-
 ![plot](./images/useremail.png)
 
 ### 3.3 Assign the users to the group
 Select the group and add the list of users.
-
 ![plot](./images/user-group-assignment.png)
 
 ## 4. Assign users and groups to enterprise application
