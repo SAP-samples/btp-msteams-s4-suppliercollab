@@ -18,6 +18,7 @@ It explains in detail how to create a new Microsoft Azure account and get a free
 Register at [Azure portal](https://portal.azure.com) and get started with the configurations. 
 
 Once you have registered, you will be able to see the following list of Azure services in portal.azure.com
+
 ![plot](./images/azure-services.png) 
 
 
@@ -26,6 +27,7 @@ Once you have registered, you will be able to see the following list of Azure se
 Login to [Azure portal](http://portal.azure.com). Select Azure Active Directory. You should be able to see the below information in the Overview of Default Directory.
 
 Below is the option to create and manage tenants
+
 ![plot](./images/tenant-defaultdirectory.png)
 
 
@@ -53,6 +55,7 @@ Now that the trust is established between Azure Active Directory(productive or t
 ### 3.1 Create groups in Azure AD
 Login to Azure Portal.Go to Default Directory and click on Groups - New Group.
 Create a new security group with the name s4businessusergrp.</br>
+
 ![plot](./images/azure-groups.png)
 
 All users supposed to use the new extension application have to be assigned to this group. 
@@ -62,13 +65,16 @@ The group assignment of your Active Directory users will be provided to SAP BTP 
 
 ### 3.2 Create users in Azure
 Go to Default Directory and click on Users - New User, as shown below.
+
 ![plot](./images/azure-users.png)
 
 Ensure the email id is updated for the newly created user. This field is important for principal propogation and is required when receiving the events from SAP S/4HANA.The same ID will be configured for the named user in SAP S/4HANA.
+
 ![plot](./images/useremail.png)
 
 ### 3.3 Assign the users to the group
 Select the group and add the list of users.
+
 ![plot](./images/user-group-assignment.png)
 
 ## 4. Assign users and groups to enterprise application
@@ -78,10 +84,11 @@ Go back to the default directory and select the enterprise application that was 
 
 Hint – Please be aware that if you're using a free Azure Active Directory, you have to add all (test) users manually, as groups cannot be added. Nevertheless, the previous group assignment will be available in SAP BTP via the configured SAML claim.
 
-Please see the below screenshot for the same. For a trial account, the assignment will look at below.
+Please see the below screenshot for the same. For a trial account, the assignment will look as shown below.
+
 ![plot](./images/enterpriseapp-users.png)
 
-In case of paid subscription , the assignment will look at below 
+In case of paid subscription , the assignment will look as shown below 
 ![plot](./images/enterpriseapp-users-paid.png)
 
 The required Role Collection Mapping on the SAP BTP side will be done in the next steps.
@@ -128,7 +135,9 @@ Before you continue, open this blog post [Get your Microsoft Azure settings read
 ### 6.6 Expose an API by clicking on Set in the sub-menu. Follow the instructions and explanations for how to form this Application ID URI from Blog Post - Steps 4,5,6, and 7.
 
 Your configuration should look like below 
+
 ![plot](./images/exposeapi.png)
+
 Note: You will have to change the Application ID URI. 
 
 ### 6.7 Click on Authentication in the sub-menu and configure the Redirect URIs for app registration and update the tokens that you would like to be issued by the authorization endpoint as below. Refer to Steps 8 and 9 from Blog Post.
@@ -153,15 +162,19 @@ Post following the steps, your configurations should look as below.
 ![plot](./images/entapp-api.png)
 
 Select expose an API and configure the client, as shown below. 
+
 ![plot](./images/entapp-apiexpose.png)
+
 Note: The client ID you are mentioning here is that of the app registration which you created.
 
 ## 7. Create Azure Bot Service
 
 Go to the home screen at http://portal.azure.com and search for the marketplace.
+
 ![plot](./images/marketplace.png)
 
 Look for Azure Bot and start to create.
+
 ![plot](./images/azurebot.png)
 
 Once you have the Azure Bot has been created, go ahead and add Microsoft Teams to the connected channels and complete all the configurations as mentioned in the blog post.

@@ -13,13 +13,14 @@ You will create(import the git repo) an OData service using the RAP framework fo
 Use the GitHub [ABAP Branch URL ](https://github.com/SAP-samples/btp-msteams-s4-suppliercollab/tree/abap) to import the ABAP package, which has the code for the RAP OData service and the background job (which will be discussed in the upcoming steps).
 
 1.1  Open **SE38** and execute the program **ZABAPGIT_STANDALONE**.<br>
-    >Note: If the above program is not there in the system, use the below link to install ABAP Git<br>
-    [abapGit Documentation](https://docs.abapgit.org/guide-install.html)
+    
+Note: If the above program is not there in the system, use the below link to install ABAP Git<br>
+[abapGit Documentation](https://docs.abapgit.org/guide-install.html)
 
 1.2  Click the **New Online** button to import the repository.<br>
 ![Import Repo](./images/1.png)
 
-1.3 Enter the git repository URL, package & branch as **ABAP** and click **Create Online Repo** to import the repository.<br>
+1.3 Enter the git repository URL "https://github.com/SAP-samples/btp-msteams-s4-suppliercollab" , package & branch as **ABAP** and click **Create Online Repo** to import the repository.<br>
 ![Repo details](./images/2.png)
 
 1.4 Select **Clone Online Repo** and click **pull** to save the repo to your SAP S/4HANA system.<br>
@@ -77,9 +78,11 @@ In this section, you will create a RFC destination to maintain the rest URL of t
 4.2. Provide a unique name for the destination and select the **Connection Type** as **G HTTP Connection to external server**.<br>
 ![Destination](./images/17.png)
 
-4.3. Copy the **URI** from **Step 14** and paste it in **Host** input box and use **443** as the port.<br>
+4.3. Copy the **URI** from **Step 3.5** and paste it in **Host** input box and use **443** as the port.<br>
+
 ![Destination](./images/18.png)
-    >Note: Host should not have **https** while pasting in the **uri**
+
+Note: Host should not have **https** while pasting in the **uri**
 
 4.4. Select the **Active** radio button for **SSL** in the section **Logon & Security** and **SSL Client(Anonymous)** in **SSL Certificate** and click **Save**.<br>
 ![Destination](./images/19.png)
@@ -90,15 +93,15 @@ In this section, you will create a RFC destination to maintain the rest URL of t
 
    
 ### 5.Configure the OAuth profile 
-In this section, you will configure the OAuth client, which will be used by the destination from **Step 16** to connect to Event Mesh.<br>
+In this section, you will configure the OAuth client, which will be used by the destination from **Step 4.2** to connect to Event Mesh.<br>
 
 5.1. Open transaction **OA2C_CONFIG**, which will open a web application in your browser, and click **Create** to create an OAuth client.<br>
 ![OAuth Create](./images/22.png)
 
-5.2. Select the drop down value **/IWXBE/MGW_MQTT** in the field **OAuth 2.0 Client Profile**, enter a unique name in the **Configuration Name** and **OAuth 2.0 Client ID** value from **Step 14** : **Clientid**.<br>
+5.2. Select the drop down value **/IWXBE/MGW_MQTT** in the field **OAuth 2.0 Client Profile**, enter a unique name in the **Configuration Name** and **OAuth 2.0 Client ID** value from **Step 3.5** : **Clientid**.<br>
 ![OAuth Client Details](./images/23.png)
 
-5.3. Scroll down and update the values for **Client Secret**  from **Step 14** **clientsecret** field as well as enter **Authorization Endpoint**  and **Token Endpoint**   from **Step 14** **tokenendpoint** field <br>
+5.3. Scroll down and enter **clientsecret** and **tokenendpoint** from **Step 3.5**. For "Authorization endpoint" value, take the token endpoint, remove /token and instead add /authorize. Eg: customlogicaa-54uuyxjv.authentication.region.hana.ondemand.com/oauth/authorize <br>
 ![Additiona details](./images/24.png)
 
 5.4. Select the radio buttons **Form Fields**, **Header Field** and **Client Credentials** as shown in the screenshot.<br>
@@ -118,20 +121,24 @@ When you have imported the ABAP code from git, the background job is also import
 
 6.3. Inside the method: **RUN_EM_JOB**, the private method: **GET_PENDING_SUPPL_CONF_POS** will be called to fetch all the purchase orders with pending supplier confirmation summary.<br>
 ![PO Fetch](./images/28.png)
-    >Note: Here we are using the standard CDS view that returns all the pending supplier confirmation summary.
+
+Note: Here we are using the standard CDS view that returns all the pending supplier confirmation summary.
 
 6.4. After the execution of the method: **GET_PENDING_SUPPL_CONF_POS**, the method: **CONNECT_TO_EM** will create the HTTP connection instance to the SAP Event Mesh, which is well explained using the comments in the code.<br>
 ![Execution](./images/36.png)
+
 You will have to update the queue name in the URI(With NameSpace) in the **CONNECT_TO_EM** method. 
 **Note :** The name space should be modified to match the one provided in the em instance. 
-Save and activate the object below proceeding:<br>
+Save and activate the object before proceeding:<br>
 ![Execution](./images/52.png)
 
-6.5 The **SEND_SUPPL_CONF_PO_TO_EM** method will send the purchase orders with pending supplier confirmation summary to the SAP Event Mesh. Make sure you update the emailId of the test user in the same method as shown below.<br>
+6.5 The **SEND_SUPPL_CONF_PO_TO_EM** method will send the purchase orders with pending supplier confirmation summary to the SAP Event Mesh. Make sure you update the email Id of the test user in the same method as shown below.<br>
 ![UpdateEmail](./images/28-2.png)
-    >**Note**: Also make sure that the emailId assigned to the User in the On-premise system is same as the test user in Azure. 
+
+**Note**: Also make sure that the email Id assigned to the user in the on-premise system is same as the test user in Azure. 
 ![Constructor](./images/35.png)
-    >**Note**: The Destination, OAuth Profile & OAuth Configuration are maintained in the **Contructor** method.
+
+**Note**: The Destination, OAuth Profile & OAuth Configuration are maintained in the **Contructor** method.
 
 
 ### 7. Create Background Job to send the Workflow Instances to the SAP Event Mesh

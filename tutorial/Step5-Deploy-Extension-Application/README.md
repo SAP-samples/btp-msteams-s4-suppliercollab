@@ -33,7 +33,7 @@ In this section you will clone the codebase from GitHub repository and deploy th
     |**SCENARIO**| For S/4HANA  on-premise, the value is "onpremise" and for S/4HANA on Azure Private Cloud, use the value "azureprivatecloud". Please follow the below steps to configure additional settings needed for S/4HANA running on [Azure-Private-Cloud](../Private-Link-Service/README.md)  |
     |**BTP_LANDSCAPE**|The region of your BTP subaccount e.g. eu20|
     |**BTP_ACCOUNT_NAME**|The subdomain of your BTP subaccount|
-    |**XSUAA_CS_URL_SUFFIX**|The audience which can be extracted from the metadata (https://.authentication./saml/metadata) of your BTP subaccount e.g. azure-live-region or aws-live-eu10|
+    |**XSUAA_CS_URL_SUFFIX**|The audience which can be extracted from the metadata (https://authentication./saml/metadata) of your BTP subaccount e.g. azure-live-region or aws-live-eu10|
     |**BTP_SCOPES**|The full name of the custom scope created in Step 2 Configure-Azure from api:// to /access_as_user|
     |**CONNECTION_NAME_GRAPH**|The name of the Graph connection creates in Step 2 Configure-Azure e.g. GraphConnection|
     |**CONNECTION_NAME_BTP**|The name of the BTP connection creates in Step 2 Configure-Azure e.g. BTPConnection|
@@ -44,10 +44,12 @@ In this section you will clone the codebase from GitHub repository and deploy th
     |**MICROSOFT_APP_PASSWORD**|A Client Secret which you created for your Azure AD App Registration|
     |**MICROSOFT_AD_TENANT_ID**|The unique Id of your Azure Active Directory|
     |**TEAMS_APP_EXTERNAL_ID**|The external AppId of the Teams App
+    |**ATTENDEES_EMAILADDRESS**|Email Id of the attendees
+    |**ATTENDEES_NAME**|The names of the attendees
 
 **Note :** Generate the GUID from command prompt using window PowerShell by invoking the command [guid]:: NewGUID() as shown below and pass this value to the paramenter **TEAMS_APP_EXTERNAL_ID**. The same value  can be passed to the **msteamsappguid-placeholder** in manifest.json **(Step 7)** 
 
-![plot](./images/guid.png) 
+    ![plot](./images/guid.png) 
 
 4. Open the manifest.yml file to update the application name. This application name needs to be updated in App Registration Configuration in Microsoft Azure.
 
@@ -61,7 +63,7 @@ In this section you will clone the codebase from GitHub repository and deploy th
     a) Build your server application
 
     ```console
-    npm run  build-deploy
+    npm run build-deploy
     ```
 
     b) Login to your Cloud Foundry subaccount, which you would like to deploy to
@@ -124,7 +126,7 @@ In this section you will clone the codebase from GitHub repository and deploy th
 8.  Go to SAP BTP Cockpit. Go to the Subaccount > Services > Instances and Subscriptions. Click on the XSUAA's instance which you are using in this application. Open the service key and get the Credetials details(clientid, clientsecret and url) as mentioned in below screenshot.
     ![plot](./images/servicekey01.png) 
 
-    Now Click on the instance for SAP Event Mesh. As this is executed in a trial environment, you will see the plan as a dev for SAP Event Mesh Service.
+    Now Click on the instance for SAP Event Mesh. In the trial account, you will see the plan as a dev for SAP Event Mesh Service.
     ![plot](./images/btpcockpit-instances.png)
 
 
@@ -132,14 +134,14 @@ In this section you will clone the codebase from GitHub repository and deploy th
 
     | key    | value    |
     | --------|---------|
-    |Queue Name| Give any name eg. PRApproval|
+    |Queue Name| Give any name eg. POConfirmations|
     |Quality Of Service| 1|
     |Webhook URL| 'https://'+ Extension Application URL from **(Step 5)**+'/em/po-attention '|
     |Exempt Handshake| yes|
     |Authentication| select **OAuth2ClientCredentials**|
     |Client ID| clientid from **(Step 8)**|
     |Client Secret|clientsecret from **(Step 8)**|
-    |Token URL |url from **(Step 8)** + 'oauth/token'|
+    |Token URL |url from **(Step 8)** + '/oauth/token'|
 
 
     ![plot](./images/em-webhook01.png)

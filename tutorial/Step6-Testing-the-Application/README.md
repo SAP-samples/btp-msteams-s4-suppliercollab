@@ -48,12 +48,11 @@ The Supplier Collaboration BOT supports 2 scenarios.
 ![plot](./images/posupconfirmedit.png)
 
 10. Update the details like quantity and delivery date of the supplier confirmation to SAP S/4HANA system from the in-meeting application by click the save button.
-
 ![plot](./images/posupconfirmsave.png)
 
 11. You can also create new supplier confirmations and delete the existing supplier confirmations using the in-meeting aplication.
 
-Congrations - You have updated the supplier confirmations to SAP S/4HANA system successfully.
+Congratulations - You have updated the supplier confirmations to SAP S/4HANA system successfully.
 
 ### Scenario2 - Query Un-fulfilled Purchase Orders
 
@@ -75,7 +74,7 @@ Congratulations! You have completed the end-to-end Supplier Collaboration scenar
 
 **Note :**  
 1. The Purchase Order in-meeting app is only available in the Desktop Client of the Teams app and not the Browser version. 
-2. the feature to add/invite someone to the meeting is under development. 
+2. The feature to add/invite someone to the meeting is under development. 
 
 ### Troubleshooting
 
@@ -91,7 +90,7 @@ Congratulations! You have completed the end-to-end Supplier Collaboration scenar
 
 6. In case of Unauthorized error in destination configuration, Principal Type can be changed to X.509 Certificate (Strict Usage) in cloud configuration. 
 
-7. Add a step to debug the issues got while publishing the Service Binding – ZSB_PO_CONF in eclipse. In my case, the binding was corrupted so pull command in AbapGit was failing. So I created a new Service Binding and updated the URL in S4Client.js. 
+7. If service binding ZSB_PO_CONF is corrupted and the pull command in AbapGit fails, create a new service binding and update the URL in [S4Client.js](../../server/services/S4Client.js).
 
-8. In the Azure BOT, make sure to pass all the scopes while adding the Graph Connection to prevent this issue. When we test the connection, we have to test with Test User and Provide all the permissions for the user
+8. In the Azure BOT Service, make sure to pass all the scopes while adding the Graph Connection to prevent issue of 403-Forbidden Error. When we test the connection, we have to test with Test User and provide all the permissions for the user.
 
