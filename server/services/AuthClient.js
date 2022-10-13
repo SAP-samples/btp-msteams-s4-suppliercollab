@@ -26,7 +26,7 @@ class AuthClient {
         this.appId = process.env.MICROSOFT_APP_ID;
         this.appSecret = process.env.MICROSOFT_APP_PASSWORD;
 
-        // Client Id and secret of process integration runtime
+        // Client Id and secret of xsuaa service instance
         const VCAP_SERVICES = JSON.parse(process.env.VCAP_SERVICES);
         const xsuaaCredentials = VCAP_SERVICES.xsuaa[0].credentials;
         this.xsuaaClientId = xsuaaCredentials.clientid;
@@ -374,15 +374,12 @@ class AuthClient {
     }
 
     // Get SAML Destination config for the principal propagation
-     async getSamlDestinationConfiguration (samlTokenEndpoint, token){
+     async getSamlDestinationConfiguration (samlTokenEndpoint, token, httpsAgent){
         try {
             var res = await (async () => {
                 try {
-                    const agent = new https.Agent({  
-                        rejectUnauthorized: false
-                    });
                     let res = await axios.get(samlTokenEndpoint, {
-                        httpsAgent: agent,
+                        httpsAgent: httpsAgent,
                         headers: {
                             'Authorization': 'Bearer '+token,
                             'X-user-token': token
@@ -421,7 +418,7 @@ class AuthClient {
     }
 
     // Get Bearer For SAML
-    async getBearerForSAML(destinationDetails, samlDestination){
+    async getBearerForSAML(destinationDetails, samlDestination, httpsAgent){
         try {
             const destinationConfiguration = destinationDetails.destinationConfiguration;
             const user = destinationConfiguration.User.trim();
@@ -435,16 +432,13 @@ class AuthClient {
             });
             var res = await (async () => {
                 try {
-                    const agent = new https.Agent({  
-                        rejectUnauthorized: false
-                      });
                     const token = destinationDetails.authTokens[0];
                     const config = {
                         auth: {
                             username: user,
                             password: password
                         },
-                        httpsAgent: agent,
+                        httpsAgent: httpsAgent,
                         headers: {
                             'Content-Type': "application/x-www-form-urlencoded"
                         }
