@@ -43,9 +43,10 @@ In this section you will clone the codebase from GitHub repository and deploy th
     |**MICROSOFT_APP_ID**| The Application Client Id of your Azure AD App Registration |
     |**MICROSOFT_APP_PASSWORD**|A Client Secret which you created for your Azure AD App Registration|
     |**MICROSOFT_AD_TENANT_ID**|The unique Id of your Azure Active Directory|
-    |**TEAMS_APP_EXTERNAL_ID**|The external AppId of the Teams App
-    |**ATTENDEES_EMAILADDRESS**|Email Id of the attendees
-    |**ATTENDEES_NAME**|The names of the attendees
+    |**TEAMS_APP_EXTERNAL_ID**|The external AppId of the Teams App|
+    |**ATTENDEES_EMAILADDRESS**|Email Id of the attendees|
+    |**ATTENDEES_NAME**|The names of the attendees|
+    |**ACCEPT_SELF_SIGNED_CERT**|true for development environment and false for production environment|
 
 **Note :** Generate the GUID from command prompt using window PowerShell by invoking the command [guid]:: NewGUID() as shown below and pass this value to the paramenter **TEAMS_APP_EXTERNAL_ID**. The same value  can be passed to the **msteamsappguid-placeholder** in manifest.json **(Step 7)** 
 

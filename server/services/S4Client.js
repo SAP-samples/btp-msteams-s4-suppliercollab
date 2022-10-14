@@ -7,6 +7,9 @@ import https from 'https'
 
 xsenv.loadEnv();
 const sDestinationName = 'S4HANA_PP';
+const httpsAgent = new https.Agent({  
+    rejectUnauthorized: process.env.ACCEPT_SELF_SIGNED_CERT === "true"? false:true
+});
 
 
 function formatDate(date){
@@ -156,8 +159,8 @@ async function executeS4APIUsingPrivateLink(url, httpMethod, data, jwtToken) {
       const authClient = new AuthClient();
       const btpDestinationToken = await authClient.getAccessTokenForBtpDestinationAccess('',jwtToken);
       const destinationDetails = await authClient.getDestinationDetails(VCAP_SERVICES.destination[0].credentials, "s4BasicAuth");
-      const samlConfiguration = await authClient.getSamlDestinationConfiguration(s4oauthDestConfigUrl, btpDestinationToken);
-      const finalBearerToken = await authClient.getBearerForSAML(destinationDetails, samlConfiguration);
+      const samlConfiguration = await authClient.getSamlDestinationConfiguration(s4oauthDestConfigUrl, btpDestinationToken, httpsAgent);
+      const finalBearerToken = await authClient.getBearerForSAML(destinationDetails, samlConfiguration, httpsAgent);
       const finalDestinationDetails = await authClient.getDestinationDetails(VCAP_SERVICES.destination[0].credentials, "s4NoAuth");
       let response = await callS4APIUsingPrivateLink(finalDestinationDetails, finalBearerToken, url, httpMethod, data);
       return response;
@@ -178,9 +181,6 @@ async function callS4APIUsingPrivateLink(finalDestinationDetails, finalBearerTok
     let finalHeaders = {
         'Authorization': `Bearer ${finalBearerToken}`
     }
-    const agent = new https.Agent({  
-        rejectUnauthorized: false
-    });
     if(httpMethod !== "get"){
     //fetch csrf token for post/patch/delete methods
         try {
@@ -190,7 +190,7 @@ async function callS4APIUsingPrivateLink(finalDestinationDetails, finalBearerTok
                         'Authorization': `Bearer ${finalBearerToken}`,
                         'x-csrf-token': 'fetch'
                     },
-                    httpsAgent: agent
+                    httpsAgent: httpsAgent
                 }
             );
             csrfToken = res.headers['x-csrf-token'];
@@ -213,7 +213,7 @@ async function callS4APIUsingPrivateLink(finalDestinationDetails, finalBearerTok
         url: xcsrfUrl,
         headers: finalHeaders,
         data: data,
-        httpsAgent: agent
+        httpsAgent: httpsAgent
       })
       return response;
     } catch (err) {
