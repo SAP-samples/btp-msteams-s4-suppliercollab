@@ -5,6 +5,7 @@ import CancelAndHelpDialog from "./utils/CancelAndHelpDialog.js";
 import SsoOAuthPrompt from "./utils/SsoOAuthPrompt.js";
 import { getLineItemDetailsCard } from "../utils/BotRequestHelper.js";
 import { executeS4API } from '../../services/S4Client.js';
+import GraphClient from '../../services/GraphClient.js';
 
 const WATERFALL_DIALOG  = 'WaterfallDialog';
 
@@ -54,7 +55,10 @@ class GetLineItemDialog extends CancelAndHelpDialog{
 
     async getGraphData(stepContext) { 
         await stepContext.context.sendActivity({ type : ActivityTypes.Typing });
-        stepContext.values.graphData = {token: stepContext.result.token};
+        const graphClient = new GraphClient(stepContext.result.token);
+
+        const profile = await graphClient.getProfile();
+        stepContext.values.graphData = {token: stepContext.result.token,profile : profile};
 
         return await stepContext.next('Success');
         

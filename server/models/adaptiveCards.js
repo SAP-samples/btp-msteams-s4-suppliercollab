@@ -819,9 +819,9 @@ const scheduleCallCard = function (cardData,graphData,replyToId) {
               {
                 type: "Input.Text",
                 id: "locationInputId",
-                placeholder: "M2B.Coral@teamsap2022.onmicrosoft.com",
+                placeholder: "Microsoft Teams meeting",
                 label: "Location :",
-                value: "M2B.Coral@teamsap2022.onmicrosoft.com"
+                value: "Microsoft Teams meeting"
               }
             ],
             width: 3
@@ -835,12 +835,12 @@ const scheduleCallCard = function (cardData,graphData,replyToId) {
               },
               {
                 type: "TextBlock",
-                text: "James Trott",
+                text: graphData.profile.displayName,
                 spacing: "Small"
               },
               {
                 type: "TextBlock",
-                text: "james.trott@saptfe.onmicrosoft.com",
+                text: graphData.profile.mail,
                 spacing: "None"
               }
             ],
@@ -1028,9 +1028,9 @@ const scheduleCallPOEventCard = function (cardData,graphData,replyToId) {
               {
                 type: "Input.Text",
                 id: "locationInputId",
-                placeholder: "M2B.Coral@teamsap2022.onmicrosoft.com",
+                placeholder: "Microsoft Teams meeting",
                 label: "Location :",
-                value: "M2B.Coral@teamsap2022.onmicrosoft.com"
+                value: "Microsoft Teams meeting"
               }
             ],
             width: 3
@@ -1044,12 +1044,12 @@ const scheduleCallPOEventCard = function (cardData,graphData,replyToId) {
               },
               {
                 type: "TextBlock",
-                text: "James Trott",
+                text: graphData.profile.displayName,
                 spacing: "Small"
               },
               {
                 type: "TextBlock",
-                text: "james.trott@saptfe.onmicrosoft.com",
+                text: graphData.profile.mail,
                 spacing: "None"
               }
             ],
