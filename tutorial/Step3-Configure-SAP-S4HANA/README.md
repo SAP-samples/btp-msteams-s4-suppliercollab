@@ -43,9 +43,11 @@ Note: If the above program is not there in the system, use the below link to ins
 
 2.4 **save_modified** method is overrided to handle the CUD operations. In this method, we call the function module **ME_PO_CONFIRM** to save the supplier confirmations.
 ![Local class](./images/5.png)
-    >Note: Use this function module with caution as this is not a released function module
+    
+**Note**: Use this function module with caution as this is not a released function module
 
 2.5 Now activate the service by clicking the **Publish** button.
+
 ![Local class](./images/6.png)
 
 Now you have the service which will be used in the upcoming chapters to read, create, update & delete the supplier confirmations from the extension application deployed in SAP BTP.

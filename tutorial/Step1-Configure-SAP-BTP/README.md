@@ -1,66 +1,69 @@
-## Setup the SAP BTP Subaccount and Initial configurations
+## Set Up the Subaccount in SAP BTP
 
 
-### 1.Create SAP BTP Subaccount
+### 1.Create or Use an Already Existing Subaccount in SAP BTP
 
-You can use both trial and enterprise account in SAP BTP. To set up a trial account, see the Get a [Free Account](https://developers.sap.com/tutorials/hcp-create-trial-account.html) on SAP BTP Trial tutorial.
+You can use both trial and enterprise account in SAP BTP. To set up a trial account, see the [Get a Free Account on SAP BTP Trial](https://developers.sap.com/tutorials/hcp-create-trial-account.html) at SAP Tutorial Navigator.
 
-Based on your SAP BTP Subscription, you can get started with the setup and configuration. In case you want to use new trial accounts, please refer to [this](https://developers.sap.com/tutorials/hcp-create-trial-account.html) tutorial to create a new trial account.
+You can use an existing subaccount or you can create a new one.
 
-You need to have assigned the Global Account Administrator role collection to your user.
-Note : You can use an existing subaccount / can create a new subaccount.
+You need to have the Global Account Administrator role collection assigned to your user.
 
-If you are new to SAP BTP, follow [this](https://developers.sap.com/group.scp-1-get-ready.html) tutorial to get started with SAP BTP, create subaccounts and assign entitlements.
+If you are new to SAP BTP, follow the [Get Ready to Develop on SAP BTP](https://developers.sap.com/group.scp-1-get-ready.html) tutorial at SAP Tutorial Navigator to get started with SAP BTP, create subaccounts and assign entitlements.
 
-1. Log in to SAP BTP cockpit, navigate to your global account and create a subaccount.
+For this scenario you need the following configurations:
+
+1. Log in to SAP BTP cockpit, navigate to your global account and create a subaccount or use an existing one.
 2. Assign the following entitlements.
 
 Service | Plan | Usage Scenario |
 --- | --- | --- |
-Cloud Foundry Runtime | MEMORY | Needed to run the application on SAP BTP, Cloud Foundry runtime. The chosen quota defines the available amount of GB memory.|
-Authorization and Trust Management Service | application | This service is required to authenticate access to the extension app's notification endpoint.|
-Destination Service | lite | Destination service lets you find the destination information required to access a remote service or system from your Cloud Foundry application.|
-Connectivity Service | lite | Connectivity service to connect extension application to an on-premise system through the Cloud Connector.|
-Event Mesh | default | Messaging bus for inter-app communication within the Cloud Foundry environment.|
+Cloud Foundry Runtime | MEMORY | Needed to run the application on SAP BTP, Cloud Foundry environment. The chosen quota defines the available amount of memory in GB.|
+SAP Authorization and Trust Management Service | application | Required to authenticate access to the extension app's notification endpoint.|
+SAP Destination Service | lite | Destination service lets you find the destination information required to access a remote service or system from your extension application.|
+SAP Connectivity Service | lite | Connectivity service to connect extension application to an on-premise system through the Cloud Connector.|
+SAP Event Mesh | default | Messaging bus for inter-app communication within the Cloud Foundry environment.|
 
 ### 2.Setup SAP Event Mesh
-Set up SAP Event Mesh and test a sample application. Follow [SAP Event Mesh](https://developers.sap.com/group.cp-enterprisemessaging-get-started.html) tutorial to get started.
 
-2.1 Navigate to your subaccount and choose Service > Instances and Subscriptions.
+To learn how to use SAP Event Mesh and test a sample application, follow the [Get Started with Messaging for Decoupled Communication](https://developers.sap.com/group.cp-enterprisemessaging-get-started.html) tutorial.
 
-2.2 Open the SAP Event Mesh application
-
-2.2.1 In SAP BTP Enterprise account, you will see the below details in Subscription and Instances. 
-Select the application SAP Event Mesh from Subscription.
+In SAP BTP Enterprise account, you should be able to see the below details in Subcriptions and Instances.
 
 ![plot](./images/eventmesh-btp.png)
 
-2.2.2 In SAP BTP trial account, you will see the below details in Subscription and Instances.
+In SAP BTP trial account, you will see the below details in Subscription and Instances.
 
 ![plot](./images/eventmesh-trial.png)
 
-Go to Instances > Select the Instance for SAP Event Mesh Service and Click on View Dashboard
+To set up SAP Event Mesh for this scenario, follow these steps:
+
+1. Navigate to your subaccount and choose **Services** > **Instances and Subscriptions**.
+
+2. If you are using SAP BTP Enterprise account, Go to **Subscriptions** > **Event Mesh** > Open the application.
+
+3. If you are using SAP BTP Trial account , Go to **Instances** > Select the Instance for SAP Event Mesh and Choose **View Dashboard**
 
 ![plot](./images/viewdashboard.png)
 
-2.3 Create Queue
+4. Choose **Message Clients** and then choose **Create Queue** to create your message client queue.
 
-2.3.1 In SAP BTP enterprise account, Choose Message Clients and click on Create Queue to create your message client queue.
-Click on Message Client from left panel > Go to Queues > Create Queue
-
-![plot](./images/btp-emapp.png)
-
-2.3.2 In SAP BTP trial account, click on Queue to create the message client queue.
-
-![plot](./images/trialaccount-emq.png)
-
-2.4 Create queue with name "POConfirmations" as shown in the below screenshot.
+5. In the **Queue Name** field enter **POConfirmations** as shown in the below screenshot.
 
 ![plot](./images/em-create-queue.png)
 
  
-### 3.Configure XSUAA Service
-Create a new  [XSUAA](https://help.sap.com/docs/CP_AUTHORIZ_TRUST_MNG) instance in your dedicated SAP BTP subaccount. This XSUAA instance is required to authenticate access to the extension app's notification endpoint.
+### 3.Set Up SAP Authorization and Trust Management Service
+
+You need the SAP Authorization and Trust Management service  to authenticate the access to the extension app's notification endpoint.
+
+See [SAP Authorization and Trust Management Service](https://help.sap.com/docs/CP_AUTHORIZ_TRUST_MNG). 
+
+To set up the SAP Authorization and Trust Management service for this scenario, follow these steps:
+
+1. Navigate to your subaccount and choose **Services** > **Instances and Subscriptions**.
+
+2. Choose **Create** to create a service instance of the Authorization and Trust Management service with the following details:
 ```
 Name: wftaskdec-uaa-service
 Service: Authorization and Trust Management Service (xsuaa)
@@ -68,8 +71,8 @@ Plan: application
 ```
 ![plot](./images/btp-uaa-service.png)
 
-Click on Next and enter the following configuration parameters and click on "Create".
-
+3. Choose **Next**, enter the following configuration parameters, and choose **Create**.
+```
     {
         "xsappname": "teamspoapp",
         "tenant-mode": "dedicated",
@@ -99,11 +102,21 @@ Click on Next and enter the following configuration parameters and click on "Cre
             }
         ]
     }
+```
 
 ![plot](./images/btp-uaa-config.png)
 
-### 4.Configure SAP Destination Service
-Create a new [SAP Destination Service Instance](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/9fdad3cad92e4b63b73d5772014b380e.html?locale=en-US) in your dedicated SAP BTP subaccount. This destination instance lets you find the destination information required to access a remote service or system from your SAP Cloud Foundry application.
+### 4. Set Up SAP Destination Service
+
+You need the SAP Destination service to access a remote service or system from your SAP Cloud Foundry application. 
+
+See [Create and Bind a Destination Service Instance](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/9fdad3cad92e4b63b73d5772014b380e.html) 
+
+To set up the SAP Destination service for this scenario, follow these steps:
+
+1. Navigate to your subaccount and choose **Services** > **Instances and Subscriptions**.
+
+2. Choose **Create** to create a service instance of the Destination service with the following details:
 
 ```
 Name : wftaskdec-dest-service
@@ -115,8 +128,17 @@ plan : lite
 For the connection to an on-premise SAP S/4HANA system, you can optionally use this service, together with (i.e. in addition to) the SAP Connectivity service, see [Consuming the Connectivity Service](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/313b215066a8400db461b311e01bd99b.html?locale=en-US)
 
 
-### 5.Configure SAP Connectivity Service
-Create a new [Connectivity](https://help.sap.com/docs/CP_CONNECTIVITY) instance in your dedicated SAP BTP subaccount. This connectivity instance lets you connect your Node.js extension application to an on-premise system through the SAP Cloud Connector. To achieve this, you must provide the required information about the target system (destination) and set up an HTTP proxy that lets your application access the on-premise system.
+### 5.Set Up SAP Connectivity Service
+
+You need the SAP Destination service to connect your Node.js extension application to an on-premise system through the SAP Cloud Connector. See [SAP BTP Connectivity](https://help.sap.com/docs/CP_CONNECTIVITY).
+
+To achieve this, you must provide the required information about the target system (destination) and set up an HTTP proxy that lets your application access the on-premise system.
+
+To set up the SAP Connectivity service for this scenario, follow these steps:
+
+1. Navigate to your subaccount and choose **Services** > **Instances and Subscriptions**.
+
+2. Choose **Create** to create a service instance of the Destination service with the following details:
 
 ```
 Name: wftaskdec-conn-service
@@ -124,4 +146,4 @@ plan: lite
 ```
 ![plot](./images/btp-conn-instance.png)
 
--> Note: If you change the names of XSUAA/Destination/Connectivity instances, you need to adjust the manifest.yml file within your Node.js extension project. This ensures the correct binding of the respective instances to your extension app. 
+**Note**: If you change the names of Authorization and Trust Management/Destination/Connectivity service instance, you need to adjust the manifest.yml file within your Node.js extension project. This will ensure correct binding of the respective instances to your extension app. 
