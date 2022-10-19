@@ -43,7 +43,7 @@ You can download the zip archive for your operating system. You need administrat
 
 **Initial Configuration**
 
-To configure the SCC, Login to [SAP Cloud Connector](https://hostname:port), where the "hostname" is the hostname of the machine on which the connector is installed, and the port number is the one configured during installation. The default port number is 8443.
+To configure the SCC, Login to SAP Cloud Connector using the URL "https://hostname:port", where the "hostname" is the hostname of the machine on which the connector is installed, and the port number is the one configured during installation. The default port number is 8443.
 
 ![plot](./images/scc_logon.png)
 
@@ -97,11 +97,11 @@ As soon as SAP Cloud connector setup is complete you able to see it in your SAP 
 
 ## Principal Propagation Setup
 
-Read the below blog post which explains how to setup Principal Propogation as well.\
+Read the below blog post which explains how to setup Principal Propogation as well.
+
 [Setting up Principal Propogation](https://blogs.sap.com/2021/09/06/setting-up-principal-propagation)
 
-[Principal propogation in multi-cloud solution]
-(https://blogs.sap.com/2020/10/01/principal-propagation-in-a-multi-cloud-solution-between-microsoft-azure-and-sap-cloud-platform-scp-part-ii)
+[Principal propogation in multi-cloud solution](https://blogs.sap.com/2020/10/01/principal-propagation-in-a-multi-cloud-solution-between-microsoft-azure-and-sap-cloud-platform-scp-part-ii)
 
 Principal propagation enables the transmission of the message's user context from the sender to the receiver while maintaining its integrity. 
 

@@ -48,9 +48,10 @@ In this section you will clone the codebase from GitHub repository and deploy th
     |**ATTENDEES_NAME**|The names of the attendees|
     |**ACCEPT_SELF_SIGNED_CERT**|true for development environment and false for production environment|
 
+
 **Note :** Generate the GUID from command prompt using window PowerShell by invoking the command [guid]:: NewGUID() as shown below and pass this value to the paramenter **TEAMS_APP_EXTERNAL_ID**. The same value  can be passed to the **msteamsappguid-placeholder** in manifest.json **(Step 7)** 
 
-    ![plot](./images/guid.png) 
+![plot](./images/guid.png)
 
 4. Open the manifest.yml file to update the application name. This application name needs to be updated in App Registration Configuration in Microsoft Azure.
 
@@ -83,7 +84,7 @@ In this section you will clone the codebase from GitHub repository and deploy th
     Once the application is deployed, note down the Extension Application URL as shown below
     ![plot](./images/deploy.png) 
 
-    You can also check the status of your application in your SAP BTP Cockpit.
+6. You can also check the status of your application in your SAP BTP Cockpit.
     ![plot](./images/SAPBTPCockpit.png) 
 
 <br>
@@ -124,8 +125,15 @@ In this section you will clone the codebase from GitHub repository and deploy th
 
     ## Post Deployment Steps
 
-8.  Go to SAP BTP Cockpit. Go to the Subaccount > Services > Instances and Subscriptions. Click on the XSUAA's instance which you are using in this application. Open the service key and get the Credetials details(clientid, clientsecret and url) as mentioned in below screenshot.
-    ![plot](./images/servicekey01.png) 
+8.  Go to SAP BTP Cockpit. Go to the Subaccount > Services > Instances and Subscriptions. 
+
+    Click on the instance for uaa service "wftaskdec-uaa-service" and create a Service key.
+
+    ![plot](./images/uaa-servicekey-create.png)
+
+    Notedown the service key details created in the above step.
+
+    ![plot](./images/uaa-servicekey-details.png)
 
     Now Click on the instance for SAP Event Mesh. In the trial account, you will see the plan as a dev for SAP Event Mesh Service.
     ![plot](./images/btpcockpit-instances.png)

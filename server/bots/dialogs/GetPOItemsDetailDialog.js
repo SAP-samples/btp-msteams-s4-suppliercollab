@@ -57,7 +57,10 @@ class GetPOItemsDetailDialog extends CancelAndHelpDialog{
 
     async getGraphData(stepContext) { 
         await stepContext.context.sendActivity({ type : ActivityTypes.Typing });
-        stepContext.values.graphData = {token: stepContext.result.token};
+        const graphClient = new GraphClient(stepContext.result.token);
+
+        const profile = await graphClient.getProfile();
+        stepContext.values.graphData = {token: stepContext.result.token,profile : profile};
 
         return await stepContext.next('Success');
         
