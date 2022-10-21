@@ -1,4 +1,4 @@
-## Test the application
+## Test the Extension Application
 
 Now that you have successfully deployed the extension application in SAP BTP and uploaded the teams application in Microsoft Teams Admin Center, follow these steps to test the application.
 
