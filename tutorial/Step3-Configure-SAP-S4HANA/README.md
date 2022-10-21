@@ -1,184 +1,219 @@
 ## Configure SAP S/4HANA for business scenario
-In this section, you will create an OData service based on the SAP RAP framework to read, create, update & delete the purchase order supplier confirmations and create a background job. This background job will read all the pending supplier confirmations for purchase orders and send them as events from SAP S/4HANA to SAP Event Mesh.
+In this section, you will create an OData service based on the SAP RAP framework to read, create, update & delete the purchase order supplier confirmations. You will also create a background job that will read all the pending supplier confirmations for purchase orders and sends them from SAP S/4HANA to SAP Event Mesh.
 
 ### Prerequisites
-Moderate knowledge of SAP ABAP, RAP framework, assigning user roles, navigating through SAP & developer authorizations assigned to your SAP S/4HANA user id.
+Basic knowledge of SAP ABAP, RAP framework, navigating through SAP, assigning user roles & authorizations in your SAP S/4HANA system.
 
-### Create SAP RAP based OData service for Purchase Order Supplier Confirmation
-You will create(import the git repo) an OData service using the RAP framework for reading, creating, updating & deleting the confirmation summary for purchase orders.
+### 1. Create a Service Key for the SAP Event Mesh Service Instance
 
->Note: This OData Service is custom development as there is no standard OData service available at the time of this git repository creation for SAP S/4HANA 2020
+In this step, you will create a service key for the SAP Event Mesh service instance. This service key holds the OAuth client credentials and the REST service URL to communicate with the SAP Event Mesh service.
 
-### 1. Import ABAP Git Project to run
-Use the GitHub [ABAP Branch URL ](https://github.com/SAP-samples/btp-msteams-s4-suppliercollab/tree/abap) to import the ABAP package, which has the code for the RAP OData service and the background job (which will be discussed in the upcoming steps).
+1. Go to the SAP BTP cockpit, navigate to your subaccount and choose **Services** > **Instances and Subscriptions**.
 
-1.1  Open **SE38** and execute the program **ZABAPGIT_STANDALONE**.<br>
+    ![Ins & Subs](./images/11.png)
+
+2. In the **Event Mesh** service instance line, choose the three dots and then choose **Create Service Key**..
+
+    ![Ins & Subs](./images/12.png)
+
+3. Provide a name and choose **Create**.
+
+    ![Ins & Subs](./images/13.png)
+
+4. Choose **View** to open the service key.
+
+    ![View Service Key](./images/14.png)
+
+5. Scroll down to the **httprest** protocol and copy the values of the **clientid**, **clientsecret**, **tokenendpoint** and **uri** parameters. You will need these parameters later on.
+
+    ![Note the service key details](./images/15.png)
+
+### 2. Create and Maintain the RFC Destination
+You will create a destination to maintain the REST URL of the SAP Event Mesh to connect and send messages.
+
+1. In your SAP S/4HANA system, open the **SM59** transaction and choose the **Create** icon to create a new destination.
+
+    ![Destination](./images/16.png)
+
+2. In the **Destination** field, enter a unique name for the destination and select **G HTTP Connection to external server** from the **Connection Type** dropdown menu.
+
+    ![Destination](./images/17.png)
+
+3. Go to the **Technical Settings** tab. In the **Host** field, enter the copied value of the **uri** parameter in step 5 of the **1. Create a Service Key for the SAP Event Mesh Service Instance** section without **https://**. In the **Port** field, enter **443**.
+
+    ![Destination](./images/18.png)
+
+    >Note: Host should not have **https** while pasting in the **uri**
+
+4. Go to the **Logon & Security** tab and in the **Status of Secure Protocol** section, select the **Active** radio button. Then, select **ANONYM SSL  Client(Anonymous)** from the **SSL Certificate** dropdown menu. Choose **Save**..
     
-Note: If the above program is not there in the system, use the below link to install ABAP Git<br>
-[abapGit Documentation](https://docs.abapgit.org/guide-install.html)
+    ![Destination](./images/19.png)
 
-1.2  Click the **New Online** button to import the repository.<br>
-![Import Repo](./images/1.png)
+5. Choose **Connection Test** to check if the connection to SAP Event Mesh is established successfully.
+    
+    ![Connection Button](./images/20.png)
 
-1.3 Enter the git repository URL "https://github.com/SAP-samples/btp-msteams-s4-suppliercollab" , package & branch as **ABAP** and click **Create Online Repo** to import the repository.<br>
-![Repo details](./images/2.png)
+    The result should look like this:
+    ![Connection Result](./images/21.png)
 
-1.4 Select **Clone Online Repo** and click **pull** to save the repo to your SAP S/4HANA system.<br>
-    >Note: For more information, please follow the official ABAP Git tutorial below:<br>
-    [abapGit Documentation](https://docs.abapgit.org/guide-install.html)
+   
+### 3. Configure the OAuth profile 
+You will configure the OAuth client, which will be used by the RFC destination that you created in step 2 of the **4. Create an RFC Destination in SAP S/4HANA** section.
 
-### 2. Understanding the generated artifacts & code
+1. In your SAP S/4HANA system, open the **OA2C_CONFIG** transaction. This will open a web application in your browser. Choose **Create** to create an OAuth client.
+    
+    ![OAuth Create](./images/22.png)
 
- After installing the git repository, different artifacts will be created in your package like the CDS view, behavior definitions, service bindings, etc.; let's understand them in detail.
-    >Note: You should use eclipse with ABAP plugins installed to do the next steps.
+2. In the **Create a new OAuth 2.0 client** pop-up:
 
-2.1 Open the CDS view **ZI_PO_CONF** in eclipse, which is used to fetch all the supplier confirmations for Purchase Orders.
+    - Select **/IWXBE/MGW_MQTT** from the **OAuth 2.0 Client Profile** dropdown menu. 
+    - In the **Configuration Name**  field, enter a unique name for the OAuth client.
+    - In the **OAuth 2.0 Client ID** field, enter the copied value of the **clientid** parameter in step 5 of the  value from **1. Create a Service Key for the SAP Event Mesh Service Instance** section.
+    
+    ![OAuth Client Details](./images/23.png)
+
+3. Go to the **Administration** tab and in the **General Settings**, in the **Client Secret** field, enter the copied value of the **clientsecret** parameter in step 5 of the  value from **1. Create a Service Key for the SAP Event Mesh Service Instance** section
+
+4. In the **Authorization Server Settings** section, in the **Authorization endpoint** and **Token Endpoint** field, enter the copied value of the **tokenendpoint** parameter in step 5 of the **1. Create a Service Key for the SAP Event Mesh Service Instance** section. In the value, remove /token and add **/authorize** instead.
+    
+    For example,customlogicaa-54uuyxjv.authentication.eu12.hana.ondemand.com/oauth/authorize.
+    
+    ![Additiona details](./images/24.png)
+
+5. Scroll down to the **Access Settings** section and select the **Form Fields**, **Header Field** and **Client Credentials** radio buttons.
+    
+    ![Additional details](./images/25.png)
+
+6. Choose **Save**.
+
+    ![Save OAuth](./images/26.png)
+
+
+### 4. Import the ABAP Git Project
+Use the GitHub [ABAP Branch URL ](https://github.com/SAP-samples/btp-msteams-s4-suppliercollab/tree/abap) to import the ABAP package, which has the code for the RAP OData service and the background job.
+
+1. In your SAP S/4HANA system, open **SE38** transaction and run the program **ZABAPGIT_STANDALONE**.
+    >Note: If this program is not available in the system, follow the [Install ABAP Git](https://docs.abapgit.org/guide-install.html) documentation
+
+2. Choose **New Online** to import the repository.
+    
+    ![Import Repo](./images/1.png)
+
+3. In the **GitHub Repository URL** field, enter "https://github.com/SAP-samples/btp-msteams-s4-suppliercollab". In the **Package** field, enter your choice of package name and in the **Branch** field, enter **abap**. Choose **Create Online Repo** to import the repository.
+
+    ![Repo details](./images/2.png)
+
+4. Choose **Clone Online Repo** and then choose **pull** to save the repository to your SAP S/4HANA system.
+    >Note: For more information, follow the official [ABAP Git tutorial](https://docs.abapgit.org/guide-online-install.html)
+
+### 5. Understanding the generated artifacts & code
+
+Now that you have imported the code, let's understand how it works in detail.
+>Note: You should use eclipse with ABAP plugins installed to do the next steps.
+
+After importing the abapGit project, a new CDS view, report, class, behaviour definition & service binding will be generated in the system.
+
+The CDS view **ZI_PO_CONF** is used to fetch all the supplier confirmations for Purchase Orders.
 ![CDS View](./images/3.png)
 
-2.2 **ZI_PO_CONF** is the behavior definition that provides the service's Create, Update & Delete capabilities. We are using unmanaged save, to call a function module to save the supplier confirmations.
+The behaviour definition **ZI_PO_CONF** provides the OData service's Create, Update & Delete capabilities. We are using unmanaged save, to call a function module to save the supplier confirmations.
 ![Behavior definition](./images/4.png)
 
-2.3 The class **zbp_i_po_conf** is linked to the behavior definition and has the code to handle the create, update & delete (CUD) operations. Navigate to the **Local Types** to find the code.
+The class **zbp_i_po_conf** is linked to the behavior definition and has the code to handle the create, update & delete operations. Navigate to **Local Types** to see the code.
 ![Local class](./images/5.png)
 
-2.4 **save_modified** method is overrided to handle the CUD operations. In this method, we call the function module **ME_PO_CONFIRM** to save the supplier confirmations.
+The method **save_modified** is added to handle the create, update & delete operations. In this method, we use the function module **ME_PO_CONFIRM** to update the supplier confirmations.
 ![Local class](./images/5.png)
+
+The **ZPEND_SUPPL_CONF_EMSEND_JOB** report will run and execute the **RUN_EM_JOB** method from the **ZCL_PENDING_SUPPL_CONIF_EMSEND** class. This will be used to fetch all the pending supplier confirmations and send them to SAP Event Mesh service.
+![Report](./images/27.png)
+
+Inside the **RUN_EM_JOB** method, the **GET_PENDING_SUPPL_CONF_POS** private method will be called to fetch all the all the purchase orders with pending supplier confirmation. 
+
+![Task Fetch](./images/28.png)
+
+>Note: Here we are using the standard CDS view that returns all the pending supplier confirmation summary.
+
+After the execution of the **GET_PENDING_SUPPL_CONF_POS** method, the **CONNECT_TO_EM** method will create the HTTP connection instance to SAP Event Mesh, which is explained using the comments in the code.
+![Execution](./images/36.png)
+
+The **SEND_SUPPL_CONF_PO_TO_EM** method will send the purchase orders with pending supplier confirmation summary to SAP Event Mesh.
+
+### 6. Adjust the Code of the ABAP Application
+
+1. Form the URI value to update it in the **CONNECT_TO_EM** method. This URI depends on wheather you are using a trail or enterprise account in SAP BTP.
+
+    - In case of a trial account, use SAP Event Mesh with the **default** plan. Then, the URI value would look like this: **/messagingrest/v1/queues/PRApproval/messages** where **PRApproval** is your queue name.
+
+    - In case of an enterprise account, use SAP Event Mesh with the **standard plan**. Then, the URI value would look like this: **/messagingrest/v1/queues/orgname%2Fs4%2Ft1%2FPRApproval/messages** where **orgname/s4/t1** is the namespace of the SAP Event Mesh service instance and **PRApproval** is the queue name.
+
+        **Note**: The URI value should always have encoded the fully-qualified queue name.
+        For example, if the fully-qualified queue name is **orgname/s4/t1/PRApproval**, then the encoded fully-qualified queue name will be **orgname%2Fs4%2Ft1%2FPRApproval**.
+
+2. In your SAP S/4HANA system, open the **SE24** transaction and in the **Object Type** field, enter **ZCL_PENDING_SUPPL_CONIF_EMSEND** and choose **Change**.
+
+3. Open the **CONNECT_TO_EM** method to update the URI value as formed in step 1.
+
+    ![Method](./images/52.png)
+
+4. Open the **CONSTRUCTOR** method to update the destination, OAuth profile and OAuth configuration parameters.
     
-**Note**: Use this function module with caution as this is not a released function module
+    - Replace the value for **dest_name** with the value of the destination name from step 2 of the **4. Create an RFC Destination in SAP S/4HANA** section.
+    - Replace the value for **auth_profile** with the value of the OAuth 2.0 client profile from step 2 of the **5. Configure The OAuth Profile** section.
+    - Replace the value for **auth_conf** with the value of the configuration name from step 2 of the **5. Configure The OAuth Profile** section.
 
-2.5 Now activate the service by clicking the **Publish** button.
+    Your configuration should look like this:
+    ![Constructor](./images/35.png)
 
-![Local class](./images/6.png)
+5. Save and activate the class.
+
+6. In eclipse, open the service binding **ZSB_PO_CONF** and choose **Publish** to activate it.
+    ![OData service Activate](./images/6.png)
 
 Now you have the service which will be used in the upcoming chapters to read, create, update & delete the supplier confirmations from the extension application deployed in SAP BTP.
 
-### 3. Generate SAP Event Mesh Service Key
-
-In this section, you will create a service key for your SAP Event Mesh instance, which has the OAuth client credentials and the rest service URL to communicate with the SAP Event Mesh.
-
-3.1. Go to your SAP BTP subaccount and select **Instances and Subscriptions**.<br>
-![Ins & Subs](./images/11.png)
-
-3.2. Click the **Three dot Button** to open the menu and click **Create Service Key** to create the service key.<br>
-![Ins & Subs](./images/12.png)
-
-3.3. Provide a name and click **Create** to create the service key.<br>
-![Ins & Subs](./images/13.png)
-
-3.4. Click **View** to open the **Service Key**.<br>
-![View Service Key](./images/14.png)
-
-3.5.. Scroll down to the **httprest** protocol and note the **clientid**, **clientsecret, **tokenendpoint**, and uri**, which you will use in the upcoming steps.<br>
-![Note the service key details](./images/15.png)
-
-### 4. Create and Maintain the RFC Destination
-In this section, you will create a RFC destination to maintain the rest URL of the SAP Event Mesh to connect and send messages.
-
-4.1. Goto **SM59** transaction and click **create** icon as shown in the below screenshot to create a new destination.<br>
-![Destination](./images/16.png)
-
-4.2. Provide a unique name for the destination and select the **Connection Type** as **G HTTP Connection to external server**.<br>
-![Destination](./images/17.png)
-
-4.3. Copy the **URI** from **Step 3.5** and paste it in **Host** input box and use **443** as the port.<br>
-
-![Destination](./images/18.png)
-
-Note: Host should not have **https** while pasting in the **uri**
-
-4.4. Select the **Active** radio button for **SSL** in the section **Logon & Security** and **SSL Client(Anonymous)** in **SSL Certificate** and click **Save**.<br>
-![Destination](./images/19.png)
-
-4.5. Click **Connection Test** to check if the connection to Event Mesh is established successfully.<br>
-![Connection Button](./images/20.png)
-![Connection Result](./images/21.png)
-
-   
-### 5.Configure the OAuth profile 
-In this section, you will configure the OAuth client, which will be used by the destination from **Step 4.2** to connect to Event Mesh.<br>
-
-5.1. Open transaction **OA2C_CONFIG**, which will open a web application in your browser, and click **Create** to create an OAuth client.<br>
-![OAuth Create](./images/22.png)
-
-5.2. Select the drop down value **/IWXBE/MGW_MQTT** in the field **OAuth 2.0 Client Profile**, enter a unique name in the **Configuration Name** and **OAuth 2.0 Client ID** value from **Step 3.5** : **Clientid**.<br>
-![OAuth Client Details](./images/23.png)
-
-5.3. Scroll down and enter **clientsecret** and **tokenendpoint** from **Step 3.5**. For "Authorization endpoint" value, take the token endpoint, remove /token and instead add /authorize. Eg: customlogicaa-54uuyxjv.authentication.region.hana.ondemand.com/oauth/authorize <br>
-![Additiona details](./images/24.png)
-
-5.4. Select the radio buttons **Form Fields**, **Header Field** and **Client Credentials** as shown in the screenshot.<br>
-![Additiona details](./images/25.png)
-
-5.5. **Save** it.<br>
-![Save OAuth](./images/26.png)
-
-### 6. Understand and Update the Background Job Codebase
-
-When you have imported the ABAP code from git, the background job is also imported to your SAP S/4HANA system. So let's understand how the code works.
-
-6.1. After completing the **Step 4**, you will have a report **ZPEND_SUPPL_CONF_EMSEND_JOB** and a class **ZCL_PENDING_SUPPL_CONIF_EMSEND** created in your SAP S/4HANA system.<br>
-
-6.2. Report: **ZPEND_SUPPL_CONF_EMSEND_JOB** will run and execute the class **ZCL_PENDING_SUPPL_CONIF_EMSEND** method **RUN_EM_JOB**. This method will fetch & send all the purchase orders with pending supplier confirmaitons( called from the background job, which is described in the upcoming steps).<br>
-![Report](./images/27.png)
-
-6.3. Inside the method: **RUN_EM_JOB**, the private method: **GET_PENDING_SUPPL_CONF_POS** will be called to fetch all the purchase orders with pending supplier confirmation summary.<br>
-![PO Fetch](./images/28.png)
-
-Note: Here we are using the standard CDS view that returns all the pending supplier confirmation summary.
-
-6.4. After the execution of the method: **GET_PENDING_SUPPL_CONF_POS**, the method: **CONNECT_TO_EM** will create the HTTP connection instance to the SAP Event Mesh, which is well explained using the comments in the code.<br>
-![Execution](./images/36.png)
-
-You will have to update the queue name in the URI(With NameSpace) in the **CONNECT_TO_EM** method. 
-**Note :** The name space should be modified to match the one provided in the em instance. 
-Save and activate the object before proceeding:<br>
-![Execution](./images/52.png)
-
-6.5 The **SEND_SUPPL_CONF_PO_TO_EM** method will send the purchase orders with pending supplier confirmation summary to the SAP Event Mesh. Make sure you update the email Id of the test user in the same method as shown below.<br>
-![UpdateEmail](./images/28-2.png)
-
-**Note**: Also make sure that the email Id assigned to the user in the on-premise system is same as the test user in Azure. 
-![Constructor](./images/35.png)
-
-**Note**: The Destination, OAuth Profile & OAuth Configuration are maintained in the **Contructor** method.
-
-
 ### 7. Create Background Job to send the Workflow Instances to the SAP Event Mesh
+You will configure the **ZPEND_SUPPL_CONF_EMSEND_JOB** report to run in the background every day. This sends the the purchase orders with pending supplier confirmations to the SAP Event Mesh.
 
-In this step, you will create the background job to send the purchase orders with pending supplier confirmations to the SAP Event Mesh. After this step, the SAP Event Mesh subscription will forward them to the MS Teams application for the action.
+1. In your SAP S/4HANA system, open the **SM36** transaction and choose **Job Wizard** to create a new background job.
+    
+    ![SM36](./images/37.png)
 
-Automate the report from **Step 6.2** to run in the background every day morning to send all the purchase orders with pending supplier confirmations to the SAP Event Mesh.
+2. Choose **Continue**.
+    
+    ![SM36 Step 2](./images/38.png)
 
-7.1 Open the Transaction **SM36** and click **Job Wizard** to create a new background job.<br>
-![SM36](./images/37.png)
+3. In the **Job Name** field, enter a unique name and choose **Continue**.
+    
+    ![SM36 Step 3](./images/39.png)
 
-7.2. Click **Continue**.<br>
-![SM36 Step 2](./images/38.png)
+4. Select the **ABAP Program Step** radio button and then choose **Continue**.
+    
+    ![SM36 Step 4](./images/40.png)
 
-7.3. Enter a unique name in **Job Name** input box and click **Continue**.<br>
-![SM36 Step 3](./images/39.png)
+5. In the **ABAP Program Name** field, enter **ZPEND_SUPPL_CONF_EMSEND_JOB** and choose **Continue**.
+    
+    ![SM36 Step 5](./images/41.png)
 
-7.4. Select **ABAP Program Step** and click **Continue**.<br>
-![SM36 Step 4](./images/40.png)
+6. Choose **Continue**.
+    
+    ![SM36 Step 6](./images/42.png)
 
-7.5. Enter the report name from **Step 6.2** and click **Continue**.<br>
-![SM36 Step 5](./images/41.png)
+7. Select the **Date/time** radio button and choose **Continue**.
+    
+    ![SM36 Step 7](./images/43.png)
 
-7.6. click **Continue**.<br>
-![SM36 Step 6](./images/42.png)
+8. Select the **Period** check box and enter the start date & time(morning 8 or the time you prefer to run this backgroundjob everyday).
+    
+    ![SM36 Step 8](./images/44.png)
 
-7.7. Select the radio button **Date/time** and click **Continue**.<br>
-![SM36 Step 7](./images/43.png)
+9. Now select the **Daily** radio button to the run this job on a daily basis and choose **Continue**.
+    
+    ![SM36 Step 9](./images/45.png)
 
-7.8. Select the check box **Period** and provide the start date & time(moring 8 or the time you choose to run this backgroundjob everyday) as show in the screenshot.<br>
-![SM36 Step 8](./images/44.png)
+10. Choose **Complete** to schedule the background job.
+    
+    ![SM36 Step 11](./images/47.png)
 
-7.9. Now select **Daily** to the run this job on a daily basis and click **Continue** button.<br>
-![SM36 Step 9](./images/45.png)
+YYou have now created of the background job that will send all the purchase orders with pending supplier confirmations every day in the morning.
 
-7.10. Click **Complete** to schedule the background job.<br>
-![SM36 Step 11](./images/47.png)
-
-You have now completed the creation of the background job that will send all the purchase orders with pending supplier confirmations every day in the morning.
-
-Congratulations!! Now you have completed the creation of the RAP based OData service, and configured the background job to send the pending supplier confirmations to SAP Event Mesh.

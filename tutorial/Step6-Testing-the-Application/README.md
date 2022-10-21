@@ -1,113 +1,108 @@
 ## Test the application
 
-Now that you have successfully deployed the Extension application to SAP BTP and uploaded the application manifest  Microsoft Teams Admin Center in the previous steps let us go ahead and test the application.
+Now that you have successfully deployed the extension application in SAP BTP and uploaded the teams application in Microsoft Teams Admin Center, follow these steps to test the application.
 
-1. Log in to SAP BTP Cockpit and check your MS teams extension application that you have deployed to SAP BTP in the previous step5 tutorial. It should be in started state.
-![plot](./images/appstarted.png)
+1. Log in to SAP BTP cockpit, navigate to your subaccount and choose **Cloud Foundry** > **Spaces** and select your space.
 
-2. Log in to Microsoft Teams as SCM Operations manager (user who interacts with the supplier for Purchase Order fulfilment).
+2. You will see the deployed application under **Application**. Choose your application to view the details. It should be in **Started** state.
+    
+    ![plot](./images/appstarted.png)
 
-3. Install the custom app by following the below steps.
+2. Log in to [Microsoft Teams](https://teams.microsoft.com) as SCM Operations manager (a user who interacts with the supplier for Purchase Order fulfilment).
 
-![plot](./images/installapp.png)
+3. In Microsoft Teams, choose **Apps** > **Built for your org**. You will be able to see your application in the detail page. In case you do not see your application, check the manifest file uploaded in Microsoft Teams Admin Center.
 
-4. Select the application and add the application.
+    ![plot](./images/installapp.png)
 
-![plot](./images/addapp.png)
+4. Select the application and choose **Add**.
 
-5. Once the app has been added, you should be able to see the below in your MS Teams with the below Welcome message.
+    ![plot](./images/addapp.png)
 
-![plot](./images/launch.png)
+5. Once the application has been added, you should be able to see a welcome message in Microsoft Teams.
+
+    ![plot](./images/launch.png)
+
 
 The Supplier Collaboration BOT supports 2 scenarios.
 
-### Scenario1 - Pending Supplier Confirmations
+### Scenario 1 - Daily Pending Supplier Confirmations Notifications
 
-1. You will receive the notification for Pending Supplier Confirmations everyday at the scheduled time or if you want immediate notifications of purchase orders with pending supplier confirmations you can login to SAP S/4HANA system and run the "ZPEND_SUPPL_CONF_EMSEND_JOB" using the SE38 transaction.
+1. You will receive the notification for Pending Supplier Confirmations everyday at the scheduled time or if you want immediate notifications of purchase orders with pending supplier confirmations you can login to SAP S/4HANA system and run the report **ZPEND_SUPPL_CONF_EMSEND_JOB**.
 
-![plot](./images/runjob.png)
+    ![plot](./images/runjob.png)
 
-2. Once you receive the notification of purchase orders with pending supplier confirmations, click on the corresponding "Select" button of the respective purchase order to view the details.
+2. Once you receive the notification of purchase orders with pending supplier confirmations, choose **Select** to view the details of the respective purchase order.
 
-![plot](./images/popending.png)
+    ![plot](./images/popending.png)
 
-3. Click the "Yes" button in the purchase order details notification to start the scheduling  of meeting.
+3. Choose **Yes** to schedule the meeting with the supplier.
 
-![plot](./images/s1podetails.png)
+    ![plot](./images/s1podetails.png)
 
-4. Click the "Schedule" button in the Meeting popup to schedule the meeting with the supplier.
+4. Choose **Schedule** to confirm.
 
-![plot](./images/s1schedulemeeting.png)
+    ![plot](./images/s1schedulemeeting.png)
 
-5. The application displays the popup once the meeting is scheduled successfully.
+5. You will recieve a success message popup after the meeting is scheduled.
 
-![plot](./images/s1schedulesuccess.png)
+    ![plot](./images/s1schedulesuccess.png)
 
-6. Join the meeting with the Supplier using Microsoft Teams
+6. Join the meeting with the supplier using Microsoft Teams.
 
-![plot](./images/s1joinmeeting.png)
+    ![plot](./images/s1joinmeeting.png)
 
-7. Open the in-meeting application to view the purchase order Details.
+7. Open the in-meeting application to view the purchase order details.
 
-![plot](./images/inmeetingapp.png)
+    ![plot](./images/inmeetingapp.png)
 
-8. Query the Purchase Order Item details by clicking the "Search Order" button in the in meeting application.
+8. Choose **Search Order** to query the purchase order item details.
 
-![plot](./images/inmeetingposearch.png)
+    ![plot](./images/inmeetingposearch.png)
 
-9. Edit the Supplier Confirmation details by click the "Edit button" of the respective supplier confirmation.
+9. Choose **Edit** to update the data.
 
-![plot](./images/posupconfirmedit.png)
+    ![plot](./images/posupconfirmedit.png)
 
-10. Update the details like quantity and delivery date of the supplier confirmation to SAP S/4HANA system from the in-meeting application by click the save button.
+10. Update **Quantity** and **Delivery Date of the Supplier Confirmation** and choose **Save**.
 
-![plot](./images/posupconfirmsave.png)
-
-11. You can also create new supplier confirmations and delete the existing supplier confirmations using the in-meeting aplication.
+    ![plot](./images/posupconfirmsave.png)
 
 Congratulations - You have updated the supplier confirmations to SAP S/4HANA system successfully.
 
-### Scenario2 - Query Un-fulfilled Purchase Orders
+### Scenario 2 - Query Un-fulfilled Purchase Orders
 
-1. Query the Purchase Order details by entering the PO number in the Supplier Collaboration BOT.
+1. Query the purchase order details by entering the number in the Supplier Collaboration BOT.
 
-![plot](./images/s2querypo.png)
+    ![plot](./images/s2querypo.png)
 
-2. Select the Purchase Order Item by clicking the respective "Select" button to view the details.
+2. Choose **Select** to view the details of the purchase order Item.
 
-![plot](./images/s2selectpoitem.png)
+    ![plot](./images/s2selectpoitem.png)
 
-3. The BOT displays the selected PO Item details.
+3. The BOT will display the selected PO Item details.
 
-![plot](./images/s2poitemdetails.png)
+    ![plot](./images/s2poitemdetails.png)
 
-4. Schedule the meeting with the supplier by clicking the "Yes" button in the above purchase order details message.
+4. Repeat the steps 3 - 10 from **Scenario 1 - Daily Pending Supplier Confirmations Notifications** section.
 
-![plot](./images/s2schedulemeeting.png)
-
-5. Collaborate with the supplier by following the above scenario 1 steps from step 5 to step 11.
-
-Congratulations! You have completed the end-to-end Supplier Collaboration scenario with Microsoft Teams and SAP S/4HANA.
+You have completed the end-to-end supplier collaboration scenario with Microsoft Teams and SAP S/4HANA.
 
 **Note :**  
-1. The Purchase Order in-meeting app is only available in the Desktop Client of the Teams app and not the Browser version. 
-2. The feature to add/invite someone to the meeting is under development. 
+1. The Purchase Order in-meeting application is only available in the desktop client of the Teams app and not in the browser version. 
+2. The feature to add or invite someone to the meeting is under development. 
 
 ### Troubleshooting
 
-1. To access MS Teams admin URL, make sure the test user has Teams Administrator Role Assignment. This is also required to upload the application in MS Teams Admin console.
+1. To access Microsoft Teams admin URL, make sure the test user has the Teams Administrator role assigned. This is also required to upload the teams application in Microsoft Teams Admin Center.
 
-2. Add Microsoft Teams Exploratory license to the test user, especially the Exchange Online (Plan 1) License without which some resources like https://graph.microsoft.com/v1.0/me/calendar will not be available with graph api. 
+2. Add Microsoft Teams Exploratory license to the test user, especially the Exchange Online (Plan 1) License without which some resources like **https://graph.microsoft.com/v1.0/me/calendar** will not be available in Microsoft Graph API. 
 
-3. Ensure you import GitHub certificate by following [abapGit documentation](https://docs.abapgit.org/guide-ssl-setup.html) before executing Step 33 in [Step3-Configure-SAP-S4HANA](../Step3-Configure-SAP-S4HANA/README.md) to avoid SSL certificate errors.
+3. Make sure you import the GitHub certificate by following the [abapGit documentation](https://docs.abapgit.org/guide-ssl-setup.html) before executing step 4 of the **6. Import the ABAP Git Project** section in [Step3-Configure-SAP-S4HANA](../Step3-Configure-SAP-S4HANA/README.md) to avoid SSL certificate errors.
 
-4. In SAP S/4HANA 2020 and higher versions, the Clone Repository is not present in Abap Git program. On creating the online repository, a local copy is created automatically. So, the Clone Online Repo step can be avoided in these systems and Pull step can be executed directly. 
+4. In SAP S/4HANA 2020 or higher, the **Clone Repository** option is not available in the ABAP Git program. When creating an online repository, a local copy is created automatically. Hence, the step 4 of the **6. Import the ABAP Git Project** section in [Step3-Configure-SAP-S4HANA](../Step3-Configure-SAP-S4HANA/README.md) can be avoided and **Pull** can be executed directly.
 
-5. In case of Unauthorized error in Webhook, make sure that the role created by uaa instance is added to the Role Collection mapped in the Trust config. If this also does not solve the Issue the Role Collection should be added to the user. 
+5. In case you get an **Unauthorized** error in the destination configuration, you have to change the principal propagation type to **X.509 Certificate (Strict Usage)** in the Cloud Connector. 
 
-6. In case of Unauthorized error in destination configuration, Principal Type can be changed to X.509 Certificate (Strict Usage) in cloud configuration. 
+6. In the Azure Bot Service, make sure to pass all the scopes while adding the Graph Connection to prevent the **403 Forbidden** error from happening. When you test the connection, you have to test it with a test user and provide all the permissions for this user.
 
-7. If service binding ZSB_PO_CONF is corrupted and the pull command in AbapGit fails, create a new service binding and update the URL in [S4Client.js](../../server/services/S4Client.js).
-
-8. In the Azure BOT Service, make sure to pass all the scopes while adding the Graph Connection to prevent issue of 403-Forbidden Error. When we test the connection, we have to test with Test User and provide all the permissions for the user.
-
+7. If the service binding: **ZSB_PO_CONF** is corrupted and the pull command in abapGit fails, create a new service binding and update the URL in [S4Client.js](../../server/services/S4Client.js).
