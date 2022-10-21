@@ -6,151 +6,176 @@
 This repository contains code samples and instructions for developing a native Microsoft Teams application that is deployed in SAP BTP. This application is used for extending the SAP S/4HANA Business scenarios.
 
 
+> **Important Note** : Please be aware that this GitHub repository is still work in progress for improvements and additional scenarios. Make sure you're pulling the repository from time to time and redeploying it in SAP BTP.
+
+
+## Table of Contents
+
+[Scenario](#scenario)\
+[Business Process Flow ](#business-process-flow)\
+[Solution Architecture](#solution-architecture)\
+&emsp;&emsp;[Connect to SAP S/4HANA Using SAP BTP Connectivity Service](#recommended-architecture-connect-to-s4-hana-on-azure-private-cloud-using-btp-connectivity-service)\
+&emsp;&emsp;[Connect to SAP S/4HANA on Azure Using SAP BTP Private Link Service and Azure Private Link](#recommended-architecture-to-connect-to-s4-hana-on-azure-private-cloud-using-btp-private-link-service-and-azure-private-link)\
+[Requirements](#requirements)\
+[Implementation: Configuration and Development](#implementation--configuration-and-development)\
+[Additional Resources](#additional-resources)\
+[Known Issues](#known-issues)\
+[Reference](#useful-links)\
+&emsp;&emsp;[Build Apps for Microsoft Teams](#build-apps-for-microsoft-teams)\
+&emsp;&emsp;[Microsoft Graph API](#microsoft-graph-api)\
+&emsp;&emsp;[Bot Framework](#bot-framework)\
+&emsp;&emsp;[Adaptive Cards](#adaptive-cards)\
+[Disclaimer](#disclaimer)\
+[How to Obtain Support](#how-to-obtain-support)\
+[Code of Conduct](#codeofconduct)\
+[Contributing](#contributing)\
+[License](#license)
 
 # Scenario
-This is one of the use cases in the procure-to-pay business process.
-A requester creates a Purchase Order with the required line items. Operations Manager / Purchase Manger needs to receive the same purchase order for approval and look for closure of the PO. In case of delays, the Operations Manager interacts with the suppliers to discuss the updates on pending confirmations /delivery overdue on the list of line items. This will help all the stakeholders to discuss, view the purchase order details together and complete the confirmation summary.
+
+The business scenario you will be implementing here will allow SAP enterprise business users to perform the ERP operations from Microsoft Teams. Business users and suppliers use Microsoft Teams Meeting to discuss and update the purchase order confirmation summary in the SAP S/4HANA system.
 
 
 # Business Process Flow 
-The extension application will provide the business user with the ability to perform ERP operations using Microsoft Teams. The business process flow is described in the following diagram:
+The extension application will provide the business user with the ability to perform ERP operations using Microsoft Teams. 
 
 ![plot](./images/businessprocess.png)
 
-1. User creates a purchase order in SAP S/4HANA with a list of line items for a specific supplier. 
-2. For every update on a purchase order , events are published to SAP Event Mesh.
-3. These events are sent to the SCM Operations Manager, who is MS Teams user. The user receives the alerts on updates on the purchase order.
-4. The Operation Manager can request for further purchase order details before deciding on a discussion with Supplier.
-5. The business user decides to set up meeting with the supplier to discuss and receive confirmation on any unfullfilled POs.
-6. During the meeting, the SCM Operation Manager can retrieve additional information on the current confirmation summary and update it back to SAP S/4HANA.
+1. User creates a purchase order in the SAP S/4HANA system with a list of line items for a specific supplier. 
+
+2. A business workflow is started in SAP S/4HANA system to check the list of unfullfilled purchase orders.
+
+3. A background job running in the SAP S/4HANA system will pick all the unfullfilled purchase orders from the purchase order workflow instance and send an event to the SAP Event Mesh.
+
+4. The extension application deployed in SAP BTP receives this event via Webhook utility.
+
+5. The extension application fetches the additional details of the purchase orders by querying the SAP S/4HANA sytem using the SAP Destination service and SAP Connectivity service or SAP Private Link service.
+
+6. The extension application in SAP BTP sends the notification to the Operations manager of the unfullfilled purchase orders to Microsoft Teams using the Azure Bot Service.
+
+7. The business user decides to set up Microsoft Teams Meeting with the supplier to discuss and receive confirmation on any unfullfilled purchase orders.
+
+6. During the meeting, the Operation Manager can retrieve additional information on the current purchase order , view the details and update the confirmation summary to the SAP S/4HANA system.
 
 # Solution Architecture
 
-## Solution Architecture for SAP S/4HANA on-premise using Cloud Connector and SAP BTP Connectivity Service
+We are giving two approaches for connecting SAP BTP and SAP S/4HANA.
 
-The architecture below leverages the SAP Cloud Connector and SAP Connectivity Service to establish secured communication between SAP BTP and SAP S/4HANA.Principal propagation of the users is enabled using XSUAA. Let us quickly understand how communication happens among the different systems and approaches for the principal propagation of users.
+The key services used from Microsoft Azure are the Azure Bot Service, Azure Blob Storage, Microsoft Graph, Microsoft Teams App Registration, Extension App Registration, and Azure Active Directory.
+
+The services used from SAP BTP are the Cloud Foundry Runtime, SAP Event Mesh, SAP Connectivity service, SAP Private Link service, and SAP Destination service. 
+
+### Connect SAP BTP and SAP S/4HANA using SAP Connectivity Service
+
+This is a high-level solution architecture diagram that shows how to use the Cloud Connector and SAP Connectivity service to establish secured communication between SAP BTP and SAP S/4HANA. 
 
 ![plot](./images/Architecture_CS.png)
 
 
-1 – When a user signs into MS Teams and starts the bot, the bot handler (part of the extension application running on SAP BTP) is called and asks the Microsoft Teams client to obtain an authentication token for the current user by sending a so-called OAuthCard to the client.
+### Connect SAP BTP and SAP S/4HANA using SAP Private Link service
 
-2 – The Microsoft Teams client fulfils this request and obtains a bot application token from Azure Active Directory using the session of the current Microsoft Teams user. This process might require an initial login on the first usage of the extension application, including a potential consent for scopes or a Multi-Factor authentication (MFA).
-
-3 – If the current session can be used to obtain a valid token from Azure Active Directory, this bot application token is sent to the Microsoft Teams client, which sends it back to the bot handler of your extension application. Depending on the data required, this token can now be exchanged for an application access token, including scopes for Microsoft Graph or a custom scope allowing you to obtain a SAML Assertion for SAP BTP access (more details will be provided later!).
-
-4 – In the case of SAP BTP access, the extension application/bot handler exchanges the application access token for a SAML Assertion containing the user's attributes and unique identifier. The so-called On-Behalf-Of (OBO) flow (click here) is used for this step. Obtaining a valid SAML Assertion is based on a trust configuration between SAP BTP and your Azure Active Directory.
-
-5 – The SAML Assertion is sent to the SAP BTP authorization server (XSUAA) to receive an access token for the SAP BTP environment. This token request needs to contain a valid Client Id and Secret, which is taken from a service key of the XSUAA Instance. This process of exchanging a SAML Assertion provided by one platform for a valid token of another platform follows the RFC 7522 standard (click here).
-
-6 – Using the access token received by XSUAA in exchange for the SAML Assertion, the extension application/bot handler can now call the OData Services from SAP S/4HANA with the propagated user identity.
-
-7 – The OData services are executed, and the result is sent to the extension application. The OData requests are secured by a standardized OAuth2 SAML Bearer Assertion, allowing the required Principal Propagation on the last mile.
-
-Note: Principal propagation configurations can be set up, which is optional. For testing purposes, you can proceed if you want to execute the scenario with Basic Authentication. However, this is not recommended.
-
-## Solution Architecture for SAP S/4HANA on Azure using Private Link Service in SAP BTP and Microsoft Azure
-
-The architecture below leveraging the SAP Private Link Service in SAP BTP and Azure Private Link for connectivity helps seamlessly establish secured communication between SAP BTP and SAP S/4HANA.
+This is a high-level solution architecture diagram that shows how to use the SAP Private Link service and Azure Private Link service to establish secured communication between SAP BTP and SAP S/4HANA.
 
 ![plot](./images/Architecture_PL.png)
 
-Please look for detailed documentation in the tutorials folder - [Azure-Private-Cloud-PrivateLink](./tutorial/Private-Link-Service/README.md) in case you want to set up as per this architecture. You will also need to perform all the steps mentioned in the Implementation Section. Note: Principal propagation configurations should be set up, which is not optional. We will be updating the codebase to support Basic Authentication for testing purposes; however, this is not recommended.
+For more information, see [Set Up Connectivity Between SAP BTP and SAP S/4HANA Using SAP Private Link Service](./tutorial/Private-Link-Service/README.md) page.
+
 
 # Requirements
 
-Below are the technical prerequistics for a successful Microsoft Teams - SAP S/4HANA integration. Primarily, we will need SAP S/4HANA configured for Purchase Orders, SAP Business Technology Platform and Microsoft Azure. Below is the list of services required to implement the end-to-end business scenario.
+These are the technical prerequistics for an integration between Microsoft Teams and SAP S/4HANA. 
 
-**SAP S/4HANA On-Premise**
-- 2 business users ( 1st  for the requester, 2nd for the approver) 
+**SAP S/4HANA**
+- 2 business users (for the requestor and for the approver)
 
-**SAP Business Technology Platform Services**
-- Cloud Foundry Subaccount
-    > - Foundation for running the MS Teams extension application.
-    > - Required for Azure AD - SAP BTP trust
+**Services in SAP BTP**
+- Cloud Foundry Runtime
+    > - Foundation for running the Microsoft Teams extension application
+    > - Required for the trust between Microsoft Azure Active Directory and SAP BTP
 - Memory/Runtime quota
-    > - Required to host the MS Teams extension application
+    > - Required for deploying and running the extension application in SAP BTP
 - Authorization & Trust Management Service
-    > - Secure MS Teams extension application endpoints
+    > - Required for securing the extension application in SAP BTP
 
 
 **Microsoft Azure and Microsoft Teams Subscription**
-- A valid Azure subscription
-- An Azure Active Directory
-    > - Required for Azure AD - SAP BTP trust
-    > - Microsoft user and authorization management
-    > - Contains user profile information (email, names, pictures)
-    > - Application registrations to allow Graph API and SAP BTP access
+- A valid Microsoft Azure subscription
+- A Microsoft Azure Active Directory
+    > - Required for the trust between Microsoft Azure Active Directory and SAP BTP
+    > - User management
+    > - Application registrations to allow access to Microsoft Graph API and SAP BTP
 
 - Microsoft Graph API
-    > - Used to retrieve user profile information and MS Teams data (chat members, team members also.)
+    > - Used to retrieve user profile information and MS Teams data (chat members, team members also)
 
 - An Azure Bot Service
-    > - Services for Azure bots (e.g. Application Insights)
-    > - Bot connection between extension app and Microsoft Teams
+    > - Service for Azure bots
+    > - Required for Bot connection between the extension application deployed in SAP BTP and Microsoft Teams
 
 - An Azure Storage Account
-    > - Storing of Conversation References for notifications
+    > - Required for storing the conversation references for the notifications
 
-- A MS Teams subscription
+- A Microsoft Teams subscription
     > - Required for paid services like Azure Storage Account
 
-**MISC**
+**Additional Information**
 
-- SAP BTP - Azure AD trust
-    > - A trust between SAP BTP and Azure AD (vice versa) has to be established
+- Establish trust between SAP BTP and Microsoft Azure Active Directory.
+   
+- The configurations required need admin user crdentials in all platforms (SAP BTP, Microsfot Azure, Microsoft Teams).
 
-- Admin users in all landscapes
-    > - The implementation requires admin users in all landscapes (SAP BTP, Microsoft Azure)
+- Ensure the users created in Microsoft Azure, SAP BTP and SAP S/4HANA have the same email address. 
 
-- Mapping based on an email address
-    > - The users in both systems(Microsoft Azure and SAP S/4HANA) need to have the same email address for principal propogation.
-
-Let us get started with development!
-
-## Implementation : Configuration and Development
+## Configuration and Development
 
 Follow the below steps to configure SAP S/4HANA, SAP BTP and Azure System for the scenario. Based on the installation type of SAP S/4HANA, please follow the documentation for configurations related to connectivity in SAP BTP. 
 
-## [Step 1: Configuration in SAP Business Technology Platform](./tutorial/Step1-Configure-SAP-BTP/README.md)
+## [Step 1: Set Up the Subaccount in SAP BTP](./tutorial/Step1-Configure-SAP-BTP/README.md)
 
-## [Step 2: Configuration in Microsoft Azure Platform and MS Teams Applications](./tutorial/Step2-Configure-Azure/README.md)
+## [Step 2: Configure Microsoft Azure Platform and Microsoft Teams](./tutorial/Step2-Configure-Azure/README.md)
 
-## [Step 3: Configuration in SAP S/4HANA System](./tutorial/Step3-Configure-S4HANA/README.md)
+## [Step 3: Configure SAP S/4HANA For Business Scenario](./tutorial/Step3-Configure-S4HANA/README.md)
 
-## [Step 4: Configuration of Principal Propogation and SAP Cloud Connector](./tutorial/Step4-Configure-Cloud-Connector/README.md)
+Step 4: Connect SAP BTP and SAP S/4HANA:
 
-## [Step 5: Deployment of Extension Application](./tutorial/Step5-Deploy-Extension-Application/README.md)
+## [(Option 1) Using SAP BTP Connectivity Service](./tutorial/Step4-Configure-Cloud-Connector/README.md)
 
-## [Step 6: Test E2E Application](./tutorial/Step6-Testing-the-Application/README.md)
+## [(Option 2) Using SAP Private Link Service](./tutorial/Private-Link-Service/README.md)
 
-Please follow the below steps to configure additional settings needed for SAP S/4HANA running on Azure and SAP BTP on Azure(any region)
-## [Set up and Deployment for SAP S/4HANA on Azure leveraging Private Link Service ](./tutorial/Private-Link-Service/README.md)
+## [Step 5: Build and Deploy the Extension Application](./tutorial/Step5-Deploy-Extension-Application/README.md)
+
+## [Step 6: Test the Extension Application](./tutorial/Step6-Testing-the-Application/README.md)
 
 ## Additional Resources
 
-This project has been implemented based on the following Microsoft Bot Builder and Microsoft Office Developer sample repositories:
-- https://github.com/microsoft/BotBuilder-Samples/tree/main/samples/typescript_nodejs/13.core-bot/
-- https://github.com/OfficeDev/Microsoft-Teams-Samples/tree/main/samples/app-sso/nodejs/
+This project has been implemented based on the following Microsoft Bot Builder and Microsoft Office Developer sample repositories.
 
-Another source of inspiration is the following blog post series by Martin Raepple, in which a Microsoft Teams extension for SAP S/4HANA is developed.
+- [BotBuilder-Samples](https://github.com/microsoft/BotBuilder-Samples/tree/main/samples/typescript_nodejs/13.core-bot/)
+
+- [Microsoft-Teams-Samples](https://github.com/OfficeDev/Microsoft-Teams-Samples/tree/main/samples/app-sso/nodejs/)
+
+Another source of inspiration are the following blog posts by Martin Raepple on setting up principal propogation between  Microsoft Azure and SAP BTP.
+
 - [Principal propagation in a multi-cloud solution between Microsoft Azure and SAP Business Technology Platform (BTP), Part I: Building the foundation](https://blogs.sap.com/2020/07/17/principal-propagation-in-a-multi-cloud-solution-between-microsoft-azure-and-sap-cloud-platform-scp/)
+
 - [Principal propagation in a multi-cloud solution between Microsoft Azure and SAP Business Technology Platform (BTP), Part II: Connecting the system on-premise](https://blogs.sap.com/2020/10/01/principal-propagation-in-a-multi-cloud-solution-between-microsoft-azure-and-sap-cloud-platform-scp-part-ii/)
 
 ## Known Issues
 
-Below are some known issues and updates that need to be considered during implementation. There will be updates to the repository and updates for the below. Please do pull the latest version and redeploy the application to SAP BTP.
+These are the known issues that needs to be considered during the implementation. There will be updates to the repository. Pull the latest version and redeploy the application in SAP BTP.
 
-*Mobile device optimization*
-    The adaptive cards are not yet optimized for picture-perfect mobile rendering. Whereas the functionality is given, the appearance of the mobile interface could be improved. This could be another challenge when optimizing the extension app for your personal needs.
+- Mobile device optimization:
 
-*User and admin consent*
-    User and a potential admin consent have not been in scope for this application. Please ensure you're granting admin consent in Azure Active Directory for the application registration to prevent potential consent issues when calling APIs.
+    The adaptive cards are not yet optimized for picture-perfect mobile rendering. Whereas the functionality is given, the appearance of the mobile interface could be improved. This could be another challenge when optimizing the extension application for your personal needs.
+
+- User and admin consent:
+
+    User and a potential admin consent have not been in scope of this application. Ensure you're granting admin consent in Microsoft Azure Active Directory for the application registration to prevent potential consent issues when calling APIs.
 
 
-## Useful links
+## Reference
 
-### Build apps for Microsoft Teams
+### Build applications for Microsoft Teams
 - [Documentation](https://docs.microsoft.com/en-us/microsoftteams/platform/overview)
 - [Code samples](https://github.com/OfficeDev/Microsoft-Teams-Samples)
 
@@ -169,17 +194,22 @@ Below are some known issues and updates that need to be considered during implem
 - [Designer](https://adaptivecards.io/designer/)
 
 ## Disclaimer
-This project has been a PoC, including several limitations and prerequisites. The objective was to build a Microsoft Teams extension for an existing SAP S/4HANA system. For this reason, the coding should not be seen as any recommendation for productive implementation. It fulfils the purpose and requirements of a PoC scope and is not intended for productive usage! It has been declared as pure PoC only to give potential development teams some first ideas for solving potential challenges when integrating Microsoft Teams and SAP S/4HANA using the SAP Business Technology Platform. We do not recommend using any parts of this coding within a productive implementation without further review or validation!
+This project has been a proof of concept, including several limitations and prerequisites. The objective was to build a Microsoft Teams extension application for an SAP S/4HANA system. For this reason, the coding should not be seen as any recommendation for productive implementation. It fulfils the purpose and requirements of a proof of concept and is not intended for productive usage. It has been declared as pure proof of concept only to give the development teams ideas for solving potential challenges when integrating Microsoft Teams and SAP S/4HANA using SAP BTP.
 
 ## How to obtain support
 [Create an issue](https://github.com/SAP-samples/<repository-name>/issues) in this repository if you find a bug or have questions about the content.
- For additional support, [ask a question in SAP Community](https://answers.sap.com/questions/ask.html).
+For additional support, [ask a question in the SAP Community](https://answers.sap.com/questions/ask.html).
 
 ## Code of Conduct
 Refer to [CODE OF CONDUCT](CODE_OF_CONDUCT.md) file.
 
 ## Contributing
-Refer to [CONTRIBUTING](CONTRIBUTING.md) file for guidelines to contributions from external parties.
+
+If you wish to contribute code, offer fixes or improvements,  send a pull request. Due to legal reasons, contributors will be asked to accept a DCO when they create the first pull request to this project. This happens in an automated fashion during the submission process. SAP uses [the standard DCO text of the Linux Foundation](https://developercertificate.org/).
+
+Refer to the [CONTRIBUTING](CONTRIBUTING.md) file for guidelines to contributions from external parties.
+
+For additional support, [ask a question in the SAP Community](https://answers.sap.com/questions/ask.html).
 
 ## License
 Copyright (c) 2022 SAP SE or an SAP affiliate company. All rights reserved. This project is licensed under the Apache Software License, version 2.0, except as noted otherwise in the [LICENSE](LICENSE) file.
