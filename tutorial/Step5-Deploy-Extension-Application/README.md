@@ -81,9 +81,9 @@ In case you changed the name of your SAP Authorization and Trust Management serv
     |**ATTENDEES_NAME**|The names of the attendee.|
     |**ACCEPT_SELF_SIGNED_CERT**|true for development environment and false for production environment.|
 
-**Note :** Generate the GUID from command prompt using window PowerShell by invoking the command [guid]:: NewGUID() as shown below and pass this value to the paramenter **TEAMS_APP_EXTERNAL_ID**. The same value  can be passed to the **msteamsappguid-placeholder** in manifest.json **(Step 7)**
+    **Note :** Generate the GUID from command prompt using window PowerShell by invoking the command [guid]:: NewGUID() as shown below and pass this value to the paramenter **TEAMS_APP_EXTERNAL_ID**. The same value  can be passed to the **msteamsappguid-placeholder** in manifest.json **(Step 7)**
 
-![plot](./images/guid.png)
+    ![plot](./images/guid.png)
 
 6. Build and deploy the application. Run the following commands:
 
@@ -131,6 +131,7 @@ In case you changed the name of your SAP Authorization and Trust Management serv
             https://[deployed appname].cfapps.region.hana.ondemand.com/botid-[Application(client)ID]
 
         Your configuration should look like this:
+
         ![plot](./images/updateuri.png) 
     
     This application name needs to be updated in the **App Registration** configuration in Microsoft Azure Portal.
@@ -157,6 +158,7 @@ In case you changed the name of your SAP Authorization and Trust Management serv
         |**domain-placeholder**|This is the runtime URL of your extension application in the SAP BTP.For example, sap-dev-teams.cfapps.eu20.hana.ondemand.com |
 
         Your **manifest.json** file should look like this:
+
         ![plot](./images/manifest1.png) 
         ![plot](./images/manifest2.png) 
 
@@ -219,6 +221,7 @@ Follow these steps to configure the webhook subscription to receive notification
     9. Choose **Create**.
 
         Your Webhook subscription should look like this:
+        
         ![plot](./images/webhook.png)
 
 6. If the **Subscription Status** is paused, then choose the **Resume** icon from the **Actions** column. 

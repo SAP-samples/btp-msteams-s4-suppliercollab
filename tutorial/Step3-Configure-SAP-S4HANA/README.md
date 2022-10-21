@@ -54,6 +54,7 @@ You will create a destination to maintain the REST URL of the SAP Event Mesh to 
     ![Connection Button](./images/20.png)
 
     The result should look like this:
+
     ![Connection Result](./images/21.png)
 
    
@@ -114,18 +115,23 @@ Now that you have imported the code, let's understand how it works in detail.
 After importing the abapGit project, a new CDS view, report, class, behaviour definition & service binding will be generated in the system.
 
 The CDS view **ZI_PO_CONF** is used to fetch all the supplier confirmations for Purchase Orders.
+
 ![CDS View](./images/3.png)
 
 The behaviour definition **ZI_PO_CONF** provides the OData service's Create, Update & Delete capabilities. We are using unmanaged save, to call a function module to save the supplier confirmations.
+
 ![Behavior definition](./images/4.png)
 
 The class **zbp_i_po_conf** is linked to the behavior definition and has the code to handle the create, update & delete operations. Navigate to **Local Types** to see the code.
+
 ![Local class](./images/5.png)
 
 The method **save_modified** is added to handle the create, update & delete operations. In this method, we use the function module **ME_PO_CONFIRM** to update the supplier confirmations.
+
 ![Local class](./images/5.png)
 
 The **ZPEND_SUPPL_CONF_EMSEND_JOB** report will run and execute the **RUN_EM_JOB** method from the **ZCL_PENDING_SUPPL_CONIF_EMSEND** class. This will be used to fetch all the pending supplier confirmations and send them to SAP Event Mesh service.
+
 ![Report](./images/27.png)
 
 Inside the **RUN_EM_JOB** method, the **GET_PENDING_SUPPL_CONF_POS** private method will be called to fetch all the all the purchase orders with pending supplier confirmation. 
@@ -135,6 +141,7 @@ Inside the **RUN_EM_JOB** method, the **GET_PENDING_SUPPL_CONF_POS** private met
 >Note: Here we are using the standard CDS view that returns all the pending supplier confirmation summary.
 
 After the execution of the **GET_PENDING_SUPPL_CONF_POS** method, the **CONNECT_TO_EM** method will create the HTTP connection instance to SAP Event Mesh, which is explained using the comments in the code.
+
 ![Execution](./images/36.png)
 
 The **SEND_SUPPL_CONF_PO_TO_EM** method will send the purchase orders with pending supplier confirmation summary to SAP Event Mesh.
@@ -163,11 +170,13 @@ The **SEND_SUPPL_CONF_PO_TO_EM** method will send the purchase orders with pendi
     - Replace the value for **auth_conf** with the value of the configuration name from step 2 of the **5. Configure The OAuth Profile** section.
 
     Your configuration should look like this:
+
     ![Constructor](./images/35.png)
 
 5. Save and activate the class.
 
 6. In eclipse, open the service binding **ZSB_PO_CONF** and choose **Publish** to activate it.
+
     ![OData service Activate](./images/6.png)
 
 Now you have the service which will be used in the upcoming chapters to read, create, update & delete the supplier confirmations from the extension application deployed in SAP BTP.

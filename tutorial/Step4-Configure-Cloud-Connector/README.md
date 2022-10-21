@@ -42,6 +42,7 @@ Follow these steps to set up the Cloud Connector and the SAP Connectivity servic
     4. In the **Login E-Mail** and **Password** fields, enter the Global Account Administrator's email ID and password.
 
     Your configuration should look like this:
+
     ![plot](./images/scc_initial_setup.png)
 
     5. Choose **Save**.
@@ -76,6 +77,7 @@ To make the SAP S/4HANA system available to the services and application in SAP 
     4. Choose **Save**. 
   
 4.  Your configuration should look like this:
+
    ![plot](./images/cloudconnector.png)
 
 

@@ -66,9 +66,11 @@ The key pillar of the principal propagation is to establish the trust between yo
 ### 4. Create Users in Azure Active Directory
 
 1. Log in to **Microsoft Azure**. Choose **Azure Active Directory** and then choose **Users** > **New User** to create a new user.
+
     ![plot](./images/azure-users.png)
 
 2. In the **Email** field, enter the email ID of the newly created user. This field is important for the principal propogation and it is required when receiving the events from SAP S/4HANA. The same email ID is configured for the named user in SAP S/4HANA.
+
     ![plot](./images/useremail.png)
 
 ### 5. Assign the Users to the Group
@@ -82,26 +84,28 @@ The key pillar of the principal propagation is to establish the trust between yo
 ### 6. Assign Users and Groups to Enterprise Applications
 
 1. In **Azure Active Directory**, go to the **Home** page and choose **Enterprise applications**.
+
     ![plot](./images/enterprise-app.png)
 
 2. To add users consider your subscription on Microsoft Azure.
 
     - If you are using a free subscription for Microsoft Azure, you need to add all (test) users manually, as you cannot add groups.
 
-        ![plot](./images/enterpriseapp-users.png)
+    ![plot](./images/enterpriseapp-users.png)
 
     - In case of paid subscription, the assignment will look as shown in the screenshot.
 
-        ![plot](./images/enterpriseapp-users-paid.png)
+    ![plot](./images/enterpriseapp-users-paid.png)
 
 ### 7. Create Role Collection Mapping in SAP BTP 
 
 1. Choose **Azure Active Directory** > **Groups**. Choose the **s4businessusersgrp** group and copy the value of **Object Id** field.
+
 ![plot](./images/objectid-group.png)
 
 2. Log in to SAP BTP cockpit, navigate to you subacccount and choose **Security** > **Trust Configuration**. Edit the trust configuration you created in step 1. This configuration is in the **Custom Identity Provider for Applications** section.
 
-    ![plot](./images/btp-trustconfig.png)
+![plot](./images/btp-trustconfig.png)
 
 3. Choose **Role Collection Mappings** and then choose **New Role Collection Mapping**.
 
@@ -206,7 +210,8 @@ Based on the blog post, follow these steps:
 ### 10. Create Azure Bot Service
 
 1. Log in to **Microsoft Azure** and search for the Marketplace.
-![plot](./images/marketplace.png)
+
+    ![plot](./images/marketplace.png)
 
 2. Search for **Azure Bot**, select the **Azure Bot** tile and then choose **Create**.
 

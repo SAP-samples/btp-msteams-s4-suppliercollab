@@ -42,20 +42,25 @@ To configure these services for the SAP S/4HANA system, follow the
         ![Oauth provider](./images/OAuth%202.0%20Identity%20Providers.png)
 
     3. Choose **Add** and then select **Upload Metadata File** from the dropdown menu.
+        
         ![Add Upload Metadata](./images/upload%20Metadata%20file.png)
 
     4. In the **Metadata File** field, upload the metadata file that you downloaded in **Step 1**, and choose **Next**.
+        
         ![Upload MetadataFile Click NExt](./images/MetadataFile%20Click%20Next.png)
 
     5. Choose **Next** and then choose **Finish**.
 
     6. Select the added trusted provider and choose **Edit**.
+        
         ![Edit Trusted Provider](./images/Trusted%20Provider%20Added.png)
 
     7. Scroll down and navigate to the **Identity Federation** tab and choosee **Add**.
+        
         ![NameID add](./images/Add%20Supported%20NameID%20Format.png)
 
     8. Select **E-mail** from the list and choose **OK**.
+        
         ![NameID add](./images/Email%20NameID%20Format.png)
 
     9. Choose **Save**.
@@ -69,10 +74,12 @@ To configure these services for the SAP S/4HANA system, follow the
 For registering an inbound OAuth client, you need to create a user ID in the system, which will be the client ID for the OAuth client.
 
 1. In your SAP S/4HANA system, open the **SU01** transaction, enter a unique value in the **User** field and choose the **Create** icon.
+    
     ![userid create](./images/UserID%20Create.png)
 
 2. In the **Logon Data** tab, in the **User Type** field,choose **System** from the dropdown menu.
-        ![user type](./images/System%20User%20Type.png)
+    
+    ![user type](./images/System%20User%20Type.png)
 
 3. Provide an initial password and choose **Save**.
 
@@ -95,27 +102,35 @@ You need to provide read authorization for the **ZMM_PUR_PO_MAINT_V2_SRV_0001** 
     >**Note**: If a pop-up shows to ask you to save the role, choose **Save**. If another pop-up opens to ask you to choose a template, do not select any templates.
 
 4. Choose **Manually** to add the Authorization object.
-![Auth Object](./images/Manually%20add%20auth.png)<br>
+
+    ![Auth Object](./images/Manually%20add%20auth.png)<br>
 
 5. In the **Authorization Object** field, enter **S_SERVICE** and chooose the **Ok** icon.
+    
     ![Auth Object](./images/Auth%20Object.png)
 
 6. Choose the **Edit** icon to provide the OData service details.
+    
     ![Auth Object](./images/Add%20service.png)<br>
 
 7. In the pop-up, select **TADIR Service** from the **Type** dropdown menu.
+    
     ![Auth Object](./images/Tadir%20Service.png)
 
 8. Provide the oData service details as shown in the screenshot and choose **Save**.
+    
     ![Auth Object](./images/Auth%20Objects%20adding.png)
 
 9. Choose **Save** again.
+    
     ![Auth Object](./images/Save%20Authorization.png)
 
 10. Choose the **Generate** icon to generate the profile.
+    
     ![Auth Object](./images/Generate%20Auth.png)
 
 11. Enter the user ID from step 1 and choose **User Comparison**.
+    
     ![Auth Object](./images/Add%20user%20to%20role.png)
 
 ### 5. Create an Inbound OAuth Client
@@ -126,21 +141,25 @@ You need to provide read authorization for the **ZMM_PUR_PO_MAINT_V2_SRV_0001** 
     ![Create OAuth](./images/Create%20OAuth%20Client.png)
 
 2. In the **OAuth 2.0 Client** field, enter the user ID which you have created in step 1. Then, provide the description and choose **Next**.
+    
     ![Step 1 OAuth](./images/Oauth2.0%20step1.png)
 
 3. Choose **Next** again.
 
 4. In the **Resource Owner Authentication** step, in the **Trusted OAuth 2.0 Identity provider** field, select the trusted provider that you have created in step 2 in the **2. Set Up OAuth Configuration for SAP S/4HANA and SAP BTP**  section and choose **Next**.
+    
     ![Step 3 OAuth](./images/Trusted%20OAuth%202.0%20Idp%20Step%203.png)
 
 5. In the **Scope Assignment** step, choose **Add** and in the pop-up that appears, enter **ZMM_PUR_PO_MAINT_V2_SRV_0001** & **ZSB_PO_CONF_0001** OData service, Choose **Next** and then choose **Finish**.
 
+    
     ![Step 4 OAuth Scope](./images/Scope%20Oauth%20step4.png)
 
     >**Note**: If the **ZMM_PUR_PO_MAINT_V2_SRV_0001** and **ZSB_PO_CONF_0001** OData service is not listed, you need to manually enable OAuth for it as mentioned below:
     >1. Open the **/n/iwfnd/maint_service** transaction.
     >2. Select the **ZMM_PUR_PO_MAINT_V2_SRV_0001** OData service and choose **OAuth** to enable the OAuth scope for the service.
     >3. Select the **ZSB_PO_CONF_0001** OData service and choose **OAuth** to enable the OAuth scope for the service.
+    
     ![Enable OAuth scope](./images/Enable%20OAuth.png)
     
    
