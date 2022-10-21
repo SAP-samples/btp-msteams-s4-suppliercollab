@@ -37,11 +37,12 @@ The business scenario you will be implementing here will allow SAP enterprise bu
 
 
 # Business Process Flow 
-The extension application will provide the business user with the ability to perform ERP operations using Microsoft Teams. 
+
+The extension application will provide the business user with the ability to perform ERP operations using Microsoft Teams. The business process flow is described in the following diagram:
 
 ![plot](./images/businessprocess.png)
 
-1. User creates a purchase order in the SAP S/4HANA system with a list of line items for a specific supplier. 
+1. User creates a purchase order in SAP S/4HANA with a list of line items for a specific supplier. 
 
 2. A business workflow is started in SAP S/4HANA system to check the list of unfullfilled purchase orders.
 
