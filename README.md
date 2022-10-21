@@ -130,21 +130,21 @@ These are the technical prerequistics for an integration between Microsoft Teams
 
 Follow the below steps to configure SAP S/4HANA, SAP BTP and Azure System for the scenario. Based on the installation type of SAP S/4HANA, please follow the documentation for configurations related to connectivity in SAP BTP. 
 
-## [Step 1: Set Up the Subaccount in SAP BTP](./tutorial/Step1-Configure-SAP-BTP/README.md)
+[Step 1: Set Up the Subaccount in SAP BTP](./tutorial/Step1-Configure-SAP-BTP/README.md)
 
-## [Step 2: Configure Microsoft Azure Platform and Microsoft Teams](./tutorial/Step2-Configure-Azure/README.md)
+[Step 2: Configure Microsoft Azure Platform and Microsoft Teams](./tutorial/Step2-Configure-Azure/README.md)
 
-## [Step 3: Configure SAP S/4HANA For Business Scenario](./tutorial/Step3-Configure-S4HANA/README.md)
+[Step 3: Configure SAP S/4HANA For Business Scenario](./tutorial/Step3-Configure-SAP-S4HANA/README.md)
 
 Step 4: Connect SAP BTP and SAP S/4HANA:
 
-## [(Option 1) Using SAP BTP Connectivity Service](./tutorial/Step4-Configure-Cloud-Connector/README.md)
+- [(Option 1) Using SAP BTP Connectivity Service](./tutorial/Step4-Configure-Cloud-Connector/README.md)
 
-## [(Option 2) Using SAP Private Link Service](./tutorial/Private-Link-Service/README.md)
+- [(Option 2) Using SAP Private Link Service](./tutorial/Private-Link-Service/README.md)
 
-## [Step 5: Build and Deploy the Extension Application](./tutorial/Step5-Deploy-Extension-Application/README.md)
+[Step 5: Build and Deploy the Extension Application](./tutorial/Step5-Deploy-Extension-Application/README.md)
 
-## [Step 6: Test the Extension Application](./tutorial/Step6-Testing-the-Application/README.md)
+[Step 6: Test the Extension Application](./tutorial/Step6-Testing-the-Application/README.md)
 
 ## Additional Resources
 
