@@ -69,7 +69,7 @@ The Supplier Collaboration BOT supports 2 scenarios.
 
 Congratulations - You have updated the supplier confirmations to SAP S/4HANA system successfully.
 
-### Scenario 2 - Query Un-fulfilled Purchase Orders
+### Scenario 2 - Query Unfulfilled Purchase Orders
 
 1. Query the purchase order details by entering the number in the Supplier Collaboration BOT.
 
