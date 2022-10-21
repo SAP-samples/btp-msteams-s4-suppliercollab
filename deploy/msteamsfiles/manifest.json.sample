@@ -3,7 +3,7 @@
     "manifestVersion": "1.9",
     "version": "1.0.0",
     "id": "<msteamsappguid-placeholder>",
-    "packageName": "com.sap.sfsf.leaverequest",
+    "packageName": "com.sap.s4hana.event",
     "developer": {
         "name": "SAP",
         "websiteUrl": "https://www.sap.com",
@@ -11,12 +11,12 @@
         "termsOfUseUrl": "https://www.sap.com"
     },
     "name": {
-        "short": "SAP Supplier Procurement BOT",
-        "full": "SAP Supplier Procurement BOT"
+        "short": "Supplier Collaboration BOT",
+        "full": "SAP Supplier Collaboration BOT"
     },
     "description": {
-        "short": "SAP Supplier Procurement BOT",
-        "full": "SAP Supplier Procurement BOTs"
+        "short": "Supplier Collaboration BOT",
+        "full": "SAP Supplier Collaboration BOT"
     },
     "icons": {
         "color": "s4hana-color.png",
@@ -33,7 +33,7 @@
     }],
     "configurableTabs": [
         {
-          "configurationUrl": "https://<DOMAIN>/Configure.html",
+          "configurationUrl": "https://<domain-placeholder>/Configure.html",
           "canUpdateConfiguration": true,
           "scopes": [
             "groupchat",
@@ -54,7 +54,8 @@
             "isNotificationOnly": false,
             "supportsFiles": false,
             "scopes": [
-                "personal"
+                "personal",
+                "groupchat"
             ]
         }
     ],

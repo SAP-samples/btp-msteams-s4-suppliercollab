@@ -3,9 +3,9 @@
 # Create Supplier Collaboration by Extending SAP S/4HANA into Microsoft Azure Ecosystem
 
 # Description
-This repository contains code samples and instructions for developing a native Microsoft Teams application and an extension application deployed in SAP BTP for extending SAP S/4HANA business  scenarios into Microsoft Azure ecosystem.
+This repository contains code samples and instructions for developing a native Microsoft Teams application that is deployed in SAP BTP. This application is used for extending the SAP S/4HANA Business scenarios.
 
-Important: Please be aware that this GitHub repository will be updated with additional scenarios.Make sure you are pulling the repository from time to time and do a redeployment to SAP Business Technology Platform.
+
 
 # Scenario
 This is one of the use cases in the procure-to-pay business process.
@@ -13,12 +13,11 @@ A requester creates a Purchase Order with the required line items. Operations Ma
 
 
 # Business Process Flow 
-The target application provides the SAP Business User to be able to perform ERP operations via MS Teams. The business process flow is described in the following diagram:
+The extension application will provide the business user with the ability to perform ERP operations using Microsoft Teams. The business process flow is described in the following diagram:
 
 ![plot](./images/businessprocess.png)
 
-Let us look at the user journey of the Requester and Purchasing/Operations Manager persona. 
-1. The requester creates/updates a purchase order in SAP S/4HANA with a list of line items for a specific supplier. 
+1. User creates a purchase order in SAP S/4HANA with a list of line items for a specific supplier. 
 2. For every update on a purchase order , events are published to SAP Event Mesh.
 3. These events are sent to the SCM Operations Manager, who is MS Teams user. The user receives the alerts on updates on the purchase order.
 4. The Operation Manager can request for further purchase order details before deciding on a discussion with Supplier.

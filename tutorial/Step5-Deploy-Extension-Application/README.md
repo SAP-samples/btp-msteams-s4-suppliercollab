@@ -1,161 +1,226 @@
-## Build and Deployment of SAP BTP Extension Application.
+## Build and Deploy the Extension Application
 
-In this section you will clone the codebase from GitHub repository and deploy the extension application in SAP BTP.
+In this section, you will clone the codebase and deploy the extension application in SAP BTP. 
 
-1. Clone this [GitHub](https://github.com/SAP-samples/btp-msteams-s4-suppliercollab) Repository.
+### 1. Clone the GitHub Repository
+    
+Access the [Collaborative Applications using SAP Business Technology Platform and Microsoft Teams](https://github.com/SAP-samples/btp-msteams-s4-suppliercollab) GitHub repository to download the project.
 
-    Before deployment to the SAP BTP environment, please make sure that you created an **XSUAA instance** in your BTP subaccount as described as mentioned under **XSUAA Instance** in Section **Step 1 - Configure SAP BTP**.
+### 2. Check the Prerequisites for Deployment
 
-    Otherwise, the deployment will fail due to the missing binding. In case you changed the name of your XSUAA instance from **wftaskdec-uaa-service** to something else, please adjust the **manifest.yml** file in the deploy folder of this project. 
+Ensure you have created the service instance of **SAP Authorization and Trust Management** in your subaccount in the SAP BTP cockpit as described in the **Set Up SAP Authorization and Trust Management Service** section of the **Step 1 - Configure SAP BTP** page before deployment.
+
+In case you changed the name of your SAP Authorization and Trust Management service instance from **wftaskdec-uaa-service** to something else, adjust the name in the **manifest.yml** file in the **deploy** folder of this project. 
+
+### 3. Update the Configuration Files and Deploy the Extension Application
+
+1. Open the **deploy** folder and rename the following files:
+
+    - Rename **manifest.yml.sample** to **manifest.yml**
+
+    - Rename **vars.yml.sample** to **vars.yml**
+
+2. Open the **manifest.yml** file in the **deploy** folder and update the application name with a name of your choice.
+
+    ![plot](./images/appname.png) 
 
 
-2. Update manifest.yml and vars.yml files.
-   Go to the deploy folder and make sure you fill the sample files in the **deploy** folder and remove the **sample** file extension before you push the app. 
+3. Copy the configuration parameters from your subaccount in SAP BTP. 
+    You do this in the SAP BTP cockpit.
 
-    Rename the manifest.yml.sample to manifest.yml 
-    Rename the vars.yml.sample to vars.yml
+    1. To update the **BTP_LANDSCAPE** variable, go to the **Overview** page of your subaccount. Choose **Cloud Foundry Environment** tab and copy the value of region in the **API Endpoint** URL. 
 
-3. Update the environment variables in vars.yml as shown below.
+    2. To update the **BTP_ACCOUNT_NAME** variable, go to the **Overview** page of your subaccount. Go to the **General** section and copy the value of the **Subdomain**.
 
-    ```
+    3. To update the **XSUAA_CS_URL_SUFFIX** variable, navigate to your subaccount and choose **Security** >  **Trust configuration** and then choose **SAML Metadata** to download the metadata file. Open the metadata file and copy the value from the **Location** variable as shown in the screenshot.
 
-    Provide your environment variables in:
-    /deploy/vars.yml
-    ```
+        ![plot](./images/samlmetadata.png) 
+        
+        Make sure you do not include the subdomain of your subaccount in SAP BTP but only use the value after the last period.
 
-    ### Environment variables
-    The following environment variables need to be set before you deploy the application to SAP BTP or upload it to your MS Teams environment.
+4. Copy the configuration parameters from Microsoft Azure Portal.
 
-    **/deploy/vars.yaml**
+    1. Log in to Microsoft Azure Portal and choose **Overview** and copy the value of **Tenant ID** to update **MICROSOFT_AD_TENANT_ID** variable.
 
+        ![plot](./images/mstenant.png) 
+
+    2. Go to **Azure Active Directory** > **Enterprise applications**. Select the application you created in step 8 of the **Configure Microsoft Azure Platform and MS Teams** page. 
+
+    3. Choose **Expose an API** and copy the value from **Scopes** section to update **BTP_SCOPES** variable.
+
+    4. Choose **Certificates & Secrets** and copy the value of **Secret ID** from **Client secrets** tab to update **MICROSOFT_APP_PASSWORD** variable.
+    
+    5. Go to the **Home** page and choose **Azure Bot Service**. Select the Azure Bot Service you created in step 10 **Configure Microsoft Azure Platform and MS Teams**. Choose **Configuration** and the copy the values of the service provider connection settings. These values will be used to update **CONNECTION_NAME_GRAPH** and **CONNECTION_NAME_BTP** variables.
+
+    6. Go the **Home** page and choose **Azure Storage Account**. Select the Azure Storage Account you created in step 11 **Configure Microsoft Azure Platform and MS Teams**. Choose **Containers** and copy the value of the container you created to update **MICROSOFT_BLOB_CONTAINER_NAME** variable. 
+    
+        Next, choose **Access keys** and the copy the value **Connection string** to update 
+        **MICROSOFT_BLOB_CONNECTION_STRING** variable.
+
+5. Update vars.yml in the **deploy** folder with the values from the previous step.
+
+    The following environment variables need to be set before you deploy the extension application in SAP BTP.
+    
     | key    | value    |
     | --------|---------|
-    |**SCENARIO**| For S/4HANA  on-premise, the value is "onpremise" and for S/4HANA on Azure Private Cloud, use the value "azureprivatecloud". Please follow the below steps to configure additional settings needed for S/4HANA running on [Azure-Private-Cloud](../Private-Link-Service/README.md)  |
-    |**BTP_LANDSCAPE**|The region of your BTP subaccount e.g. eu20|
-    |**BTP_ACCOUNT_NAME**|The subdomain of your BTP subaccount|
-    |**XSUAA_CS_URL_SUFFIX**|The audience which can be extracted from the metadata (https://authentication./saml/metadata) of your BTP subaccount e.g. azure-live-region or aws-live-eu10|
-    |**BTP_SCOPES**|The full name of the custom scope created in Step 2 Configure-Azure from api:// to /access_as_user|
-    |**CONNECTION_NAME_GRAPH**|The name of the Graph connection creates in Step 2 Configure-Azure e.g. GraphConnection|
-    |**CONNECTION_NAME_BTP**|The name of the BTP connection creates in Step 2 Configure-Azure e.g. BTPConnection|
-    |**MICROSOFT_BLOB_CONTAINER_NAME**|The respective values copied in Step 2 - Configure-Azure|
-    |**MICROSOFT_BLOB_CONNECTION_STRING**|The respective values copied in Step 2 - Configure-Azure|
-    |**DOMAIN**| The CF domain of your MS Teams extension application e.g. btp-s4-msteams-suppliercollab.cfapps.region.hana.ondemand.com |
-    |**MICROSOFT_APP_ID**| The Application Client Id of your Azure AD App Registration |
-    |**MICROSOFT_APP_PASSWORD**|A Client Secret which you created for your Azure AD App Registration|
-    |**MICROSOFT_AD_TENANT_ID**|The unique Id of your Azure Active Directory|
+    |**SCENARIO**| For SAP S/4HANA, the value is **onpremise** and for SAP S/4HANA Private Cloud, use the **azureprivatecloud** value. Follow these steps to configure the additional settings required for SAP S/4HANA running on [Azure Private Cloud](../Azure-Private-Cloud-PrivateLink/README.md).|
+    |**BTP_LANDSCAPE**|The region of your subaccount in SAP BTP. For example, eu20.|
+    |**BTP_ACCOUNT_NAME**|The subdomain of your subaccount in SAP BTP. For example, trial-us-xjn2uwee9|
+    |**XSUAA_CS_URL_SUFFIX**|The audience value (For example, azure-live-eu20 or aws-live-eu10 or aws-live) which can be extracted from the SAML metadata of your subaccount in SAP BTP.|
+    |**BTP_SCOPES**|The full name of the custom scope created **Configure Microsoft Azure Platform and MS Teams** page from api:// to /access_as_user. For example, api://appname.cfapps.eu20.hana.ondemand.com/botid-ef84483e-546c-414c-b75a-d1er58c095c7/access_as_user|
+    |**CONNECTION_NAME_GRAPH**|The name of the service provider connection settings in Azure Bot Service. For example, GraphConnection.|
+    |**CONNECTION_NAME_BTP**|The name of the service provider connection settings in Azure Bot Service. For example, BTPConnection.|
+    |**MICROSOFT_BLOB_CONTAINER_NAME**|The Azure Storage Account container name. For example, botstorage.|
+    |**MICROSOFT_BLOB_CONNECTION_STRING**|The connection string in Azure Storage account. For example, DefaultEndpointsProtocol=https;AccountName=s4hanateams;AccountKey=sagsdgsdg==;EndpointSuffix=core.windows.net|
+    |**DOMAIN**| The Cloud Foundry domain of your extension application. Copy the application name you updated in manifest.json file and append .cfapps.region.hana.ondemand.com. Check your SAP BTP subaccount region and update accordingly. For example,btp-s4-suppliercollab.cfapps.eu20.hana.ondemand.com|
+    |**MICROSOFT_APP_ID**| The Application(client) ID of your Azure Active Directory Enterprise application. For example, ed84483e-546c-424c-b75a-d1ab58c095c7.|
+    |**MICROSOFT_APP_PASSWORD**|A Client secret which you created for your Azure Active Directory Enterprise application. For example, eefref~dssdgdfgfdgfdreQdgf-adasfs4sd.|
+    |**MICROSOFT_AD_TENANT_ID**|The unique ID of your Azure Active Directory. For example, a22b0962-0d9d-4b4e-aa99-we1b581f071w|
     |**TEAMS_APP_EXTERNAL_ID**|The external AppId of the Teams App|
-    |**ATTENDEES_EMAILADDRESS**|Email Id of the attendees|
-    |**ATTENDEES_NAME**|The names of the attendees|
-    |**ACCEPT_SELF_SIGNED_CERT**|true for development environment and false for production environment|
+    |**ATTENDEES_EMAILADDRESS**|Email Id of the attendee that you want to invite for the Supplier meeting. For example,suppliercontact@company.com|
+    |**ATTENDEES_NAME**|The names of the attendee.|
+    |**ACCEPT_SELF_SIGNED_CERT**|true for development environment and false for production environment.|
 
-
-**Note :** Generate the GUID from command prompt using window PowerShell by invoking the command [guid]:: NewGUID() as shown below and pass this value to the paramenter **TEAMS_APP_EXTERNAL_ID**. The same value  can be passed to the **msteamsappguid-placeholder** in manifest.json **(Step 7)** 
+**Note :** Generate the GUID from command prompt using window PowerShell by invoking the command [guid]:: NewGUID() as shown below and pass this value to the paramenter **TEAMS_APP_EXTERNAL_ID**. The same value  can be passed to the **msteamsappguid-placeholder** in manifest.json **(Step 7)**
 
 ![plot](./images/guid.png)
 
-4. Open the manifest.yml file to update the application name. This application name needs to be updated in App Registration Configuration in Microsoft Azure.
+6. Build and deploy the application. Run the following commands:
 
-    ```console
-    Provide your application name in:
-    /deploy/manifest.yml
-    ```
-5. Build and deploy.
-    Once you're ready, please execute the following steps manually or by running the respective npm command.
+    1. Open the Cloud Foundry command line interface (cf CLI).
 
-    a) Build your server application
+    2. Log in to your subaccount in SAP BTP to deploy the extension application.
+      Check your region and update the API endpoint accordingly. For example, "https://api.cf.region.hana.ondemand.com"
 
-    ```console
-    npm run build-deploy
-    ```
+            ```
+            cf login -a `<CF API endpoint>`
+            ```
 
-    b) Login to your Cloud Foundry subaccount, which you would like to deploy to
+    3. Build and deploy the application
 
-    ```
-    cf login -a `<CF API endpoint e.g. https://api.cf.region.hana.ondemand.com/>`
-    ```
+            ```
+            npm run build-deploy
+            ```
 
-    c) Push the application to your dedicated subaccount
+    4. Once the application is deployed, copy its URL.
 
-    ```
-    cd deploy
-    cf push -f manifest.yml --vars-file vars.yml
-    ```
+        ![plot](./images/deploy.png) 
 
-    Once the application is deployed, note down the Extension Application URL as shown below
-    ![plot](./images/deploy.png) 
+        You can also check the status of your application in the SAP BTP cockpit.
 
-6. You can also check the status of your application in your SAP BTP Cockpit.
-    ![plot](./images/SAPBTPCockpit.png) 
+        ![plot](./images/SAPBTPCockpit.png) 
 
-<br>
+7. Update the application name in the Microsoft Azure App Registration.
 
-7. Microsoft Teams manifest upload.
+    1. Log in to the Microsoft Azure Portal.
 
-    In this step, you will upload the manifest definition of the extension application to Microsoft Teams.
+    2. Choose **Azure Active Directory** and then choose **App registrations**. 
 
-    Go to project folder and then navigate to folder deploy->msteamsfiles. Rename manifest.json.sample and remove the .sample. 
-    In your manifest.json file, the below parameters need to be updated.<br>
+    3. Choose the app registration you created and then choose **Overview** to copy the **Application(client)ID**.
+      
+        ![plot](./images/appid.png) 
 
-    Use the generated GUID in **Step 3** and update the manifest.json file with the below parameter before you upload the manifest definition of your extension app to Microsoft Teams.
+    4. Choose **Authentication**. 
+    
+    5. In the **Platform configurations** section, choose **Web** > **Redirect URIs**.
+    
+    6. Choose **Add URI** to create a new entry with the URL of the extension application deployed in SAP BTP and append the **Application(client)ID** which you copied in the previous step.
 
-    **/deploy/msteamsfiles/mainfest.json**
-    | key    | value    |
-    | --------|---------|
-    |**msteamsappguid-placeholder**|A unique GUID for the MS Teams App which you have generated just now. This GUID is for the MS Teams environment and does not equal the Application Registration Client Id.|
-    |**msappid-placeholder**|Azure App Registration Client ID of your extension application.|
-    |**domain-placeholder:**|The CF domain of your MS Teams extension.|
+        The URL should look like this:
 
-    Your manifest.json file should reflect the below changes
-    ![plot](./images/manifest1.png) 
+            https://[deployed appname].cfapps.region.hana.ondemand.com/botid-[Application(client)ID]
 
-    ![plot](./images/manifest2.png) 
+        Your configuration should look like this:
+        ![plot](./images/updateuri.png) 
+    
+    This application name needs to be updated in the **App Registration** configuration in Microsoft Azure Portal.
 
-    Once you have the configuration parameters updated, you must zip all files in the /deploy/msteamsfiles folder.
-    ![plot](./images/zipfilecontent.png) 
+8. Update the **manifest.json** file in Microsoft Teams.
 
-    Now, we need to upload this to Microsoft Teams Admin Center(https://admin.teams.microsoft.com/). Login with an Active Directory user who has a Microsoft Teams Administrator role assigned.
+    1. Go to **/deploy/msteamsfiles** folder in your project directory. 
+   
+    2. Rename **manifest.json.sample** to **manifest.json**.
 
-    Use the menu as shown below to upload your app.
-    ![plot](./images/admincenter.png) 
+    3. Generate the GUID from command prompt. 
+        
+        ![plot](./images/guid.png) 
 
-    Once the upload is successful, you should be able to see the extension application in the Build for your org Section within Microsoft Teams, as shown below.<br>
-    Login to https://teams.microsoft.com and check the App Store.
+    4. Open the **manifest.json** file.
+    
+    5. Update the **msteamsappguid-placeholder** parameter with the value of the GUID.
+
+      
+        | key    | value    |
+        | --------|---------|
+        |**msteamsappguid-placeholder**|A unique GUID for the Microsoft Teams App. It can be generated using Windows PowerShell by invoking the command [guid]:: NewGUID. This GUID is for the Microsoft Teams environment only and is not the same as the Application Registration Client ID.|
+        |**msappid-placeholder**|The Application(client) ID  of your Microsoft Azure Enterprise application. Refer to step 8 from **Configure Microsoft Azure Platform and MS Teams** page. You have noted this Application(client) ID in this step.|
+        |**domain-placeholder**|This is the runtime URL of your extension application in the SAP BTP.For example, sap-dev-teams.cfapps.eu20.hana.ondemand.com |
+
+        Your **manifest.json** file should look like this:
+        ![plot](./images/manifest1.png) 
+        ![plot](./images/manifest2.png) 
+
+
+9. Upload the **manifest.json** file to Microsoft Teams.
+
+    Before you upload the manifest.json file of your extension application to Microsoft Teams, make sure that you have updated all the parameters in the manifest.json file.
+
+
+    1. Once you have the configuration parameters updated, you must archive all files in the /deploy/msteamsfiles folder in a ZIP file.
+
+        ![plot](./images/zipfilecontent.png) 
+
+    2. Log in to [Microsoft Teams Admin Center](https://admin.teams.microsoft.com/) with an Active Directory user who has a Microsoft Teams Administrator role assigned
+    
+    3. Upload the ZIP file. Once you have successfully uploaded the ZIP file, you should be able to see the extension application in the **Build for your org** section within Microsoft Teams.
+
+        ![plot](./images/admincenter.png) 
+
+        
+10. Log in to [Microsoft Teams](https://teams.microsoft.com) and choose **Apps** > **Built for your org**. You should have the **Supplier Collaboration BOT** application.
+
     ![plot](./images/installapp.png) 
 
 
-    ## Post Deployment Steps
+### 4. Create a Webhook Subscription in SAP Event Mesh
 
-8.  Go to SAP BTP Cockpit. Go to the Subaccount > Services > Instances and Subscriptions. 
+Follow these steps to configure the webhook subscription to receive notifications from SAP S/4HANA via SAP Event Mesh.
 
-    Click on the instance for uaa service "wftaskdec-uaa-service" and create a Service key.
+1. In the SAP BTP cockpit, navigate to your subaccount and choose **Services** > **Instances and Subscriptions**.
+
+2. Go to the **Instance** tab, select the instance of **Authorization and Trust Management Service** and in the **Service Keys** tab, choose **Create**.
 
     ![plot](./images/uaa-servicekey-create.png)
 
-    Notedown the service key details created in the above step.
+3. In the **Credentials** pop-up, copy the values of the **clientid**, **clientsecret**, and **url**.
 
     ![plot](./images/uaa-servicekey-details.png)
 
-    Now Click on the instance for SAP Event Mesh. In the trial account, you will see the plan as a dev for SAP Event Mesh Service.
-    ![plot](./images/btpcockpit-instances.png)
+4. Open the SAP Event Mesh application.
 
+    - If you are using SAP BTP Enterprise account, go to the **Subscriptions** tab and choose **Event Mesh** to open the application.
 
-    With this following information create webhook as shown below:
+    - If you are using SAP BTP Trial account, go to **Instances** tab, select the instance for **SAP Event Mesh** and choose **View Dashboard**.
+      
+5. Create a Webhook subscription.
 
-    | key    | value    |
-    | --------|---------|
-    |Queue Name| Give any name eg. POConfirmations|
-    |Quality Of Service| 1|
-    |Webhook URL| 'https://'+ Extension Application URL from **(Step 5)**+'/em/po-attention '|
-    |Exempt Handshake| yes|
-    |Authentication| select **OAuth2ClientCredentials**|
-    |Client ID| clientid from **(Step 8)**|
-    |Client Secret|clientsecret from **(Step 8)**|
-    |Token URL |url from **(Step 8)** + '/oauth/token'|
+    1. Choose **Webhook Subscriptions** and then choose **Create**.
+    2. In the **Subscription** field, enter a name of your choice.
+    3. In the **Queue Name** dropdown menu, select the queue you created in the **Set Up the Subaccount in SAP BTP** page.
+    4. In the **Quality of Service** dropdown menu, select 1.
+    5. In the **Webhook URL** field, enter **https://extensionapplicationURL/em/po-attention**. The **extensionapplicationURL** is the value you copied in Step 5 of **3. Update Configuration Files and Deploy**.
+    
+    6. In the **Exempt Handshake** field, select **Yes**.
 
+    7. In the **Authentication** dropdown menu, select **OAuth2ClientCredentials**.
 
-    ![plot](./images/em-webhook01.png)
+    8. In the **Client ID** , **Client Secret** and **Token URL** fields, enter the values you copied in step 3 of the **4. Create a Webhook Subscription in SAP Event Mesh** section. In the **Token URL** field, enter the URL from step 3 with the **/oauth/token** appended.
+  
+    9. Choose **Create**.
 
-    If the subscription status is paused, then click on resume subscription.
+        Your Webhook subscription should look like this:
+        ![plot](./images/webhook.png)
 
-    This completes the deployment of the SAP BTP Extension application and the webhook configuration. 
-    Now, let us go ahead and test the application.
+6. If the **Subscription Status** is paused, then choose the **Resume** icon from the **Actions** column. 
+
+Now you have the extension application deployed in SAP BTP and the webhook configured.
